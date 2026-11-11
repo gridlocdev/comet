@@ -1,0 +1,40 @@
+@font-face { font-family: 'Bangers'; src: url('../../assets/fonts/bangers.woff2'); font-display: block; }
+@font-face { font-family: 'Monoton'; src: url('../../assets/fonts/monoton.woff2'); font-display: block; }
+@font-face { font-family: 'Chakra Petch'; src: url('../../assets/fonts/chakra-petch-700.woff2'); font-weight: 700; font-display: block; }
+
+:root {
+  --ink: #0a0520; --cyan: #20f0ff; --yellow: #ffe11f;
+  --ui: 'Chakra Petch', system-ui, sans-serif; --comic: 'Bangers', Impact, sans-serif; --sign: 'Monoton', 'Bangers', sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color: #eef; font: 700 16px var(--ui); }
+body { position: fixed; inset: 0; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none; overscroll-behavior: none; }
+/* the field, letterboxed on black: platform/engine.js sets its size and place */
+#game { position: absolute; display: block; }
+[hidden] { display: none !important; }
+
+/* ---- full-screen cards: pause and the high-score initials */
+#screen { position: fixed; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(8px, 2vh, 20px); padding: calc(12px + env(safe-area-inset-top, 0px)) 16px calc(12px + env(safe-area-inset-bottom, 0px)); overflow-y: auto; touch-action: pan-y; }
+#screen.dim { background: radial-gradient(ellipse at center, #07051ae0 0, #07051a99 70%); }
+.banner { font: 400 clamp(40px, 10vmin, 110px)/1 var(--comic); color: var(--yellow); -webkit-text-stroke: .05em var(--ink); paint-order: stroke fill; text-shadow: .05em .06em 0 var(--ink), 0 0 .3em currentColor; }
+.banner span { display: inline-block; }
+.btn { all: unset; cursor: pointer; box-sizing: border-box; padding: 9px 22px; min-height: 42px; background: #120e30f2; border: 2px solid #5c5a9c; font: 700 clamp(13px, 2vmin, 17px) var(--ui); text-align: center; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); }
+.btn.focus { border-color: var(--cyan); background: #1d1654; color: var(--cyan); }
+.btn.big { font: 400 clamp(24px, 5.2vmin, 44px)/1 var(--comic); letter-spacing: .04em; padding: 12px 26px; }
+.col { display: flex; flex-direction: column; gap: 8px; align-items: stretch; min-width: min(320px, 86vw); }
+
+/* the high-score initials: a letter with ▲ above and ▼ below, three across */
+.ini { display: flex; gap: clamp(12px, 3vmin, 28px); justify-content: center; margin: 2vmin 0 3vmin; }
+.ini-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.ini-col .btn { min-width: 2.6em; padding-inline: .6em; }
+.ini-letter { font: 400 clamp(48px, 12vmin, 110px)/1 var(--sign); color: var(--cyan); text-shadow: 0 0 .25em currentColor; min-width: 1em; text-align: center; }
+
+/* ---- touch: a stick, the hold button and pause */
+#touch { position: fixed; inset: 0; z-index: 25; pointer-events: none; }
+#stick { position: absolute; left: calc(14px + env(safe-area-inset-left, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); width: clamp(110px, 34vmin, 160px); aspect-ratio: 1; border-radius: 50%; border: 3px solid #fff5; background: #0a082070; pointer-events: auto; touch-action: none; }
+#stick i { position: absolute; left: 50%; top: 50%; width: 44%; height: 44%; margin: -22% 0 0 -22%; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 14px var(--cyan); opacity: .8; }
+#touch button { position: absolute; pointer-events: auto; touch-action: none; border-radius: 50%; color: #fff; font: 400 clamp(20px, 5vmin, 28px) var(--comic); }
+#tHold { right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: clamp(92px, 28vmin, 132px); aspect-ratio: 1; background: #ff2040c0; border: 4px solid var(--yellow); box-shadow: 0 0 18px #ff2040; }
+#tPause { right: calc(12px + env(safe-area-inset-right, 0px)); top: calc(12px + env(safe-area-inset-top, 0px)); width: 44px; height: 44px; background: #0a0820b0; border: 2px solid #fff6; font: 700 14px var(--ui) !important; }
+
+#debug { position: fixed; z-index: 70; pointer-events: none; bottom: 8px; left: 8px; padding: 2px 6px; font: 12px ui-monospace, Menlo, monospace; color: #8f8; background: rgba(0, 0, 0, .8); white-space: pre; }
