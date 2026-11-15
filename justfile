@@ -58,6 +58,12 @@ bench *args:
     @[ -d node_modules/playwright ] || just install-bench
     node tools/bench.mjs "$@"
 
+# smoke run through the dev rooms (?debug&room=): gym cases against their bands, museum checks, zoo in every view
+[positional-arguments]
+rooms *args:
+    @[ -d node_modules/playwright ] || just install-bench
+    node tools/rooms.mjs "$@"
+
 # draw the home-screen icons in icons/ from the game's shapes and palette
 icons:
     node tools/icons.mjs

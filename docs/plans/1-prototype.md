@@ -14,7 +14,7 @@ Comet was a cabinet in a walkable 3D arcade; it is now its own game. Decided: pl
 - [ ] Play Comet (http://localhost:8142). Does it play like the first version, and do its sounds and loops sound right? They have only been checked as code, not heard.
 - [ ] Add Comet to a phone's home screen (`just lan`, reload, then Share → Add to Home Screen): the icon should show the comet on its tether, not a letter, and it should open full screen.
 - [ ] Try it on a phone (`just lan`): the stick, SWING and pause buttons haven't been used on a real device or an emulated one.
-- [ ] The pause menu and initials entry are neon cards over the field (http://localhost:8142/?debug&shot=initials). Keep them, or draw them on the field in the pixel font like the first version?
+- [ ] The pause menu, settings and initials are now drawn like the field: thin outlines, flat colours, a light system font, cyan for focus (http://localhost:8142/?debug&shot=pause, then Settings; http://localhost:8142/?debug&shot=initials). Do they sit with the game, and read on a phone?
 
 - [ ] Try the settings (http://localhost:8142/?debug&shot=settings): each tab, the bars with keys, mouse and a pad, Reset to defaults, and Back. Do Brightness, Show frame rate, Reduce flashing (crash, respawn blink, a tether about to snap) and Game speed 50% do what they say?
 - [ ] Pause a run (http://localhost:8142/?debug&shot=pause): Continue, Settings, Restart and Quit to title, with their No/Yes questions.
@@ -22,6 +22,15 @@ Comet was a cabinet in a walkable 3D arcade; it is now its own game. Decided: pl
 - [ ] Settings, Display, Graphics quality (http://localhost:8142/?debug&shot=settings): Low should look softer, High as before. With `?debug` the readout's `gfx` shows the preset; on a slow phone, does Automatic step down (`gfx:auto medium` and lower) and keep the run smooth?
 - [ ] Listen to the soundtrack (http://localhost:8142): the title and run tracks are lead-free backing tracks (pad, arp, bass; a light kit in the run). Are they chill enough, or too empty? Does the music sit under the swing hum and the rising drone, or fight them? Does the run's track change on a beat when you start, and does the game-over sting cut straight in? Pause: the music should dip and keep going. Settings, Audio: Music off, then on; Music volume.
 - [ ] Listen: Master and Effects volume at the defaults set the same levels as before (the softened sounds are quieter by design); Mono audio and Play in the background.
+- [ ] Walk the dev rooms from the hub (http://localhost:8142/?debug&room=hub). Is anything missing that you'd want to look up there?
+- [ ] Gym, latch reach (http://localhost:8142/?debug&room=gym&row=latch): hold as each comet passes its ring. Are the orange cases hard but fair, and is the red one out of reach as it should be?
+- [ ] Gym, swing to count (http://localhost:8142/?debug&room=gym&row=swing): time your own swing in the bottom lane against the numbered ones. Is the shortest green swing easy to hit, the orange one tight?
+- [ ] Gym, perfect release (http://localhost:8142/?debug&room=gym&row=perfect): does the cone match what feels like aiming at a mote? Any band that play says is wrong gets moved in `src/dev/gym-data.js` with a note why.
+- [ ] Zoo, check views (http://localhost:8142/?debug&room=zoo&group=field, V to cycle): in gray, can you still tell the comet, anchor, mote and hazard apart? In blackout, is only the danger left?
+
+## Recommendations
+
+- [ ] When Comet gets levels or hand-placed arenas, add spatial notes: short labels in the arena under `?debug` saying what each placement is for (a gap to swing across, an anchor the edge swallows on purpose). Until then the one arena's notes are the museum's closing exhibit.
 
 ## Follow-ups
 

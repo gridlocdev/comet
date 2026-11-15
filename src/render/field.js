@@ -1,18 +1,25 @@
 // The play field, drawn with the 2D canvas in field units (1280 × 720, y down, as the rules use) under a transform the
 // caller sets. Back to front: the deadly edge and its frame, hazards, anchor rings, tether, motes, trail, 1UP ring,
-// comet, crash flash. Thin lines and flat colours, nothing glowing.
+// comet, crash flash. Thin lines and flat colours, nothing glowing. The dev rooms can switch the colours to a check view.
 import { CONFIG, SCREEN } from '../world/comet-data.js';
 import { border } from '../world/hazards.js';
 import { isLive, swingWarn } from '../player/comet.js';
 import { LIFE_FLASH } from '../world/motes.js';
 import { setting } from '../game/settings.js';
 import { invulnerable } from '../world/sim.js';
-import { C } from './palette.js';
+import { C as GAME, VIEWS } from './palette.js';
 
 const W = SCREEN.w, H = SCREEN.h;
 
 const rgb = (hex)=> [1, 3, 5].map((i)=> parseInt(hex.slice(i, i + 2), 16));
-const TETHER = rgb(C.tether), RED = rgb(C.hazard);
+
+// the check view the dev rooms draw in ('' is the game's own look); see VIEWS in palette.js
+let view = '';
+/** @param {string} name '', 'gray', 'silhouette' or 'blackout' */
+export function setFieldView(name) { view = name in VIEWS ? name : ''; }
+export const fieldView = ()=> view;
+// what the field is drawn on in the current view
+export const fieldBackdrop = ()=> view ? VIEWS[view].backdrop : '#000000';
 const mixColour = (a, b, t)=> `rgb(${a.map((v, i)=> Math.round(v + (b[i] - v) * t)).join(',')})`;
 
 // four bars, t thick, just inside the rectangle (x, y, w, h)
@@ -32,6 +39,7 @@ function segment(g, x0, y0, x1, y1)
 
 export function drawField(g, w)
 {
+    const C = view ? VIEWS[view] : GAME, TETHER = rgb(C.tether), RED = rgb(C.hazard);
     const t = w.t, p = w.player, r = CONFIG.playerRadius;
     const calm = setting('a11y.reduceFlashing');
     const b = border(t);

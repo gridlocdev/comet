@@ -14,14 +14,13 @@ await storage.init();
 state.load();
 loadSettings();
 
-loop.use([musicSystem, fpsSystem, ...features]);
+// ?debug loads the dev tools; ?debug&room= opens a dev room in place of the game
+const dev = FLAGS.debug ? await import('./dev/index.js') : null;
+const room = dev?.openRoom();
+const systems = room ? [room] : features;
+loop.use([musicSystem, fpsSystem, ...systems]);
 loop.build();
-
-if (FLAGS.debug)
-{
-    const { installDebug } = await import('./dev/index.js');
-    installDebug({ state, events, loop, clock, features });
-}
+dev?.installDebug({ state, events, loop, clock, features: systems });
 
 startLoop(
     (dt)=> { pollInput(); loop.update(dt); clearPresses(); },

@@ -1,5 +1,5 @@
 // Raw keys, mouse, gamepad and touch → named actions. Game code asks for an action, never a key or button.
-// Gamepad: standard mapping, 0 A, 1 B, 4 LB, 5 RB, 7 right trigger, 9 menu, 12-15 d-pad.
+// Gamepad: standard mapping, 0 A, 1 B, 3 Y, 4 LB, 5 RB, 7 right trigger, 9 menu, 12-15 d-pad.
 const down = new Set(), pressed = new Set();
 addEventListener('keydown', (e)=>
 {
@@ -95,6 +95,8 @@ export const input = {
     // the settings screen's tabs: Q and E, or the shoulder buttons (LB 4, RB 5)
     tabPrev: ()=> anyPressed('KeyQ') || padPressed.has(4),
     tabNext: ()=> anyPressed('KeyE') || padPressed.has(5),
+    // the dev rooms' check view: V, or the pad's Y (3)
+    view: ()=> anyPressed('KeyV') || padPressed.has(3),
     /** the stick's dead zone, from the Controls setting */
     setDeadzone(v) { deadzone = v; },
     // a connected pad decides the prompts

@@ -9,4 +9,5 @@ This game follows the layered, feature-folder layout in `docs/architecture.md`. 
 - `src/platform/engine.js` is the only place that sets up the drawing surface (the 2D canvas), reads the URL flags and runs the loop; other files import from there.
 - `lib/` and `*-data.js` files import no DOM code and have tests in `test/`.
 - The current stage is Prototype: `docs/plans/1-prototype.md` (change this line when the stage changes). Pending work (what's for the user, Claude's recommendations, follow-ups) goes there, later stages' work into their own plans, and ideas held back from 1.0 into their own plan file in `docs/plans/`, not into other docs.
+- Answer questions about the comet's numbers, what a thing or sound is called, and how a system behaves from the dev rooms (`?debug&room=`, `src/dev/`). A change to the tuning, the field's look, a sound or a rule updates its room in the same change; `just rooms` checks them.
 - After changes run `just check` (syntax, layer rules via `tools/coupling-report.mjs`, and types via `jsconfig.json`) and `just test`.

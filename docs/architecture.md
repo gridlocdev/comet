@@ -24,7 +24,9 @@ src/
   features/
     run/      a run and the screens around it: index.js (title, play, pause, game over, sound), view.js (the frame)
     scores/   the top ten and the initials entry, and their save slice
-  dev/        ?debug tools, loaded only with that flag
+  dev/        ?debug tools, loaded only with that flag: index.js (the readout, keys, window.game, openRoom), and the
+              dev rooms: hub, gym (gym-data.js, gym-lanes.js), zoo (zoo-data.js), museum (museum-data.js,
+              museum-exhibits.js), labels.js (their shared bar, signs and labels)
   main.js     boot
 music/        the rendered soundtrack (mp3), from tools/music/songs.js
 icons/        the home-screen icons, drawn by tools/icons.mjs; manifest.json lists them
@@ -60,13 +62,13 @@ Read this when changing the rules, the field's look or the screens.
 
 `render/field.js` draws a world with the 2D context: shapes in field units under a transform of `surface.scale`, back to front (the deadly edge and its frame, hazards, anchor rings, tether, motes, trail, 1UP ring, comet, crash flash). Words are drawn in the bitmap font of `lib/pixel-font.js` onto canvases of their own at the surface's real resolution (`ui/word-layer.js`), so every font pixel lands on whole device pixels, and only when their text changes: the HUD (`ui/hud.js`) at most about 15 times a second, the screens' messages and prompt in `features/run/view.js`. It keeps the first version's palette (`render/palette.js`) and layout, and nothing glows.
 
-`features/run/index.js` runs the screens: title (`menu`) → `play` → `paused` or `over`, and `settings` from the title or the pause menu. Closing the game-over screen emits `run-ended { score }`; `features/scores` asks for initials on a card when the score makes the ten, saves it in its `scores` slice and emits `scores-done`, and the run goes back to the title. The run reads the best score through the `best()` hook (`loop.sections('best')`). Its sounds are made from code in `audio/sfx-defs.js` (see [sound.md](sound.md)) and named in its `SFX_NAME` map; the swing and pulse loops run through `sfx.loop(name, volume, pitch)`, held at 0 when silent. The soundtrack (`audio/music.js`, [audio.md](audio.md)) plays the track the run's `musicFor` names, from `music/`. Settings are the shared table (`lib/settings.js`) with Comet's changes in `game/settings.js`, saved in the `core` slice and shown by `ui/settings-screen.js`; see [settings.md](settings.md). The save is one localStorage key, `comet-save-v1`; 1.0.0's `comet` slice is moved to `scores` on load.
+`features/run/index.js` runs the screens: title (`menu`) → `play` → `paused` or `over`, and `settings` from the title or the pause menu. Closing the game-over screen emits `run-ended { score }`; `features/scores` asks for initials on a card when the score makes the ten, saves it in its `scores` slice and emits `scores-done`, and the run goes back to the title. The run reads the best score through the `best()` hook (`loop.sections('best')`). Its sounds are made from code in `audio/sfx-defs.js` (see [sound.md](sound.md)) and named for the rules' events in its `WORLD_SFX` map; the swing and pulse loops run through `sfx.loop(name, volume, pitch)`, held at 0 when silent. The soundtrack (`audio/music.js`, [audio.md](audio.md)) plays the track the run's `musicFor` names, from `music/`. Settings are the shared table (`lib/settings.js`) with Comet's changes in `game/settings.js`, saved in the `core` slice and shown by `ui/settings-screen.js`; see [settings.md](settings.md). The save is one localStorage key, `comet-save-v1`; 1.0.0's `comet` slice is moved to `scores` on load.
 
 On a touch screen `ui/touch.js` shows a stick, the SWING button and, during a run, a pause button.
 
 ## Debug flags
 
-Add to the URL. `?debug` is needed for `shot` and `speed`.
+Add to the URL. `?debug` is needed for every flag but `mute`.
 
 | Flag | Does |
 |---|---|
@@ -74,3 +76,22 @@ Add to the URL. `?debug` is needed for `shot` and `speed`.
 | `?shot=play`, `bot`, `over`, `initials` | skip to a run, a run played by a simple pilot, the game over, the initials entry |
 | `?speed=4` | game speed |
 | `?mute` | no sound |
+| `?room=hub`, `gym`, `zoo`, `museum` | open a dev room in place of the game (see [Dev rooms](#dev-rooms)) |
+| `?row=latch`, `swing`, `perfect` | the gym's row |
+| `?group=field`, `sounds`, `colours` and `?item=<key>` | the zoo's group and the item in focus |
+| `?exhibit=motion`, `closing`, `chain`, `lives` | the museum's exhibit |
+| `?view=gray`, `silhouette`, `blackout` | a check view of the field's palette (V or pad Y cycles it) |
+| `?bot` | the gym holds the button for you |
+| `?fast` | the museum runs at 8× |
+
+## Dev rooms
+
+Read this when changing the rules, the tuning, the field's look or the sounds: the rooms show them, and change with them.
+
+`?debug&room=` opens a room as the only system in the loop. Each is built from the real rules and drawing code (`world/sim.js`, `render/field.js`, `audio/sfx-defs.js`), never a copy, and puts what it shows on `window.room` for `tools/rooms.mjs` (`just rooms`).
+
+- **Hub**: links to every page below.
+- **Gym**: one small world per case, side by side. Its cases come from `world/comet-data.js` in `gym-data.js` with a band each: green passes easily, orange is hard but passes, red can't pass (up to 80% of the limit, to the limit, past it). Rows: latch reach, swing to count, perfect release. `gym-lanes.js` runs them headless, so `test/dev/gym.test.js` runs the same cases.
+- **Zoo**: every field thing, sound and colour at real size, with its numbers and its file; the field things also magnified. The check views are palettes in `render/palette.js` (`VIEWS`), switched with `setFieldView`.
+- **Museum**: each system running live with a sign: what it does, its numbers, the mistake to avoid and its files. `museum-exhibits.js` runs and checks them headless for `test/dev/museum.test.js`.
+

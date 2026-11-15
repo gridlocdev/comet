@@ -6,6 +6,7 @@ import { FLAGS } from '../../platform/engine.js';
 import { loop } from '../../game/loop.js';
 import { input } from '../../platform/input.js';
 import { sfx } from '../../audio/sfx.js';
+import { WORLD_SFX } from '../../audio/sfx-defs.js';
 import { musicCutIn, setMusicArea, setMusicDuck } from '../../audio/music.js';
 import { cards } from '../../ui/cards.js';
 import { letterIn, spellOut } from '../../ui/kinetic.js';
@@ -18,7 +19,6 @@ import { score } from '../../world/score.js';
 import { pressWord, render, settingsWord } from './view.js';
 
 // the run's sound for each sound the rules queue
-const SFX_NAME = { snap: 'release', chime: 'mote', crash: 'crash' };
 
 // the swing loop's pitch follows speed, the pulse loop's follows the run's clock
 const map = (x, a, b, c, d)=> c + (Math.max(a, Math.min(b, x)) - a) / (b - a) * (d - c);
@@ -155,7 +155,7 @@ function gameOver()
 
 function playSounds()
 {
-    for (const e of world.sfx) sfx.play(SFX_NAME[e.id], 1, e.pitch);
+    for (const e of world.sfx) sfx.play(WORLD_SFX[e.id], 1, e.pitch);
     world.sfx.length = 0;
     const p = world.player;
     const live = mode === 'play' && world.life !== 'dead' && !world.gameOver;

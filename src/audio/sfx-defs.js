@@ -25,6 +25,9 @@ function soft(wave, hz, amp, seconds, decay)
     return render(seconds, (t)=> amp * a(t) * pluck(t, .003, decay) * Math.min(1, (seconds - t) / .01));
 }
 
+// which sound plays for each sound the rules queue in world.sfx (world/sim.js)
+export const WORLD_SFX = { snap: 'release', chime: 'mote', crash: 'crash' };
+
 export const SFX_DEFS = {
     // the run's own sounds
     release: {

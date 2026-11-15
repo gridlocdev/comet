@@ -21,6 +21,7 @@ just old-sounds      # copy 1.0.0's recordings out of git for the sound board (t
 just install         # install the pinned Playwright (only `just bench` needs it)
 just install-bench   # install Playwright and its Firefox build, about 100 MB, once per Playwright version
 just bench <runs>    # time frames in Playwright's Firefox, headless and muted
+just rooms           # smoke run through the dev rooms in Playwright's Firefox, headless
 ```
 
 The game must be served over HTTP; ES modules don't load from `file://`. Without just: `python3 -m http.server 8142`.
@@ -36,7 +37,7 @@ just test    # unit tests for lib/, *-data.js, the sim and the rules
 
 ## Debug flags
 
-Add `?debug` to the URL for a readout and slow motion (`1`) or fast forward (`2`). `?debug&shot=bot` plays a run with a simple pilot. The full list is in [architecture.md](architecture.md#debug-flags).
+Add `?debug` to the URL for a readout and slow motion (`1`) or fast forward (`2`). `?debug&shot=bot` plays a run with a simple pilot. `?debug&room=hub` opens the dev rooms: a gym of the comet's limits, a zoo of every thing, sound and colour, and a museum of the systems running. The full list is in [architecture.md](architecture.md#debug-flags).
 
 ## Performance
 

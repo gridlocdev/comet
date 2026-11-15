@@ -1,6 +1,21 @@
-// ?debug only, never loaded by the shipped game: the live readout, the console hook and the debug keys.
+// ?debug only, never loaded by the shipped game: the live readout, the console hook, the debug keys, and the dev
+// rooms (?debug&room=hub|gym|zoo|museum), which stand in for the game's features while one is open.
 import { FLAGS } from '../platform/engine.js';
 import { graphics } from '../platform/graphics.js';
+import { hubRoom } from './hub.js';
+import { gymRoom } from './gym.js';
+import { zooRoom } from './zoo.js';
+import { museumRoom } from './museum.js';
+
+const ROOMS = { hub: hubRoom, gym: gymRoom, zoo: zooRoom, museum: museumRoom };
+
+/** the room ?room= names, as a system for the loop, or null for the game */
+export function openRoom()
+{
+    const name = FLAGS.params.get('room');
+    if (!name) return null;
+    return (ROOMS[name] ?? ROOMS.hub)();
+}
 
 export function installDebug({ state, events, loop, clock, features })
 {
