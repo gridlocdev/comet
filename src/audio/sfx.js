@@ -1,6 +1,5 @@
-// Web Audio: sounds baked once from code (sfx-defs.js, and each game's own through define()), and recorded samples a
-// game loads, played once or as held loops. Browsers keep audio off until the first key or tap, so everything starts
-// then.
+// Web Audio: sounds baked once from code (sfx-defs.js, and each game's own through define()), played once or as held
+// loops. Browsers keep audio off until the first key or tap, so everything starts then.
 //
 // The mix: effects → their bus (EFFECTS_LEVEL × Effects volume) → a compressor ┐
 //          music (audio/music.js, its own level × Music volume) → musicOut ─────┴→ master (Master volume) → a limiter → out
@@ -23,8 +22,8 @@ const enabled = !FLAGS.mute;
 const buffers = {}, last = {};
 // baked sounds a game brings along: { name: def }, in the same form as SFX_DEFS
 const defs = {};
-// recorded samples a game asks for: { name: { url, level } }, decoded once audio starts; held loops by name
-const samples = {}, loops = {};
+// held loops by name
+const loops = {};
 
 function start()
 {
@@ -50,7 +49,6 @@ function start()
     applyAll(true);
     for (const [name, def] of Object.entries(SFX_DEFS)) bake(name, def);
     for (const [name, def] of Object.entries(defs)) bake(name, def);
-    for (const name of Object.keys(samples)) decode(name);
 }
 
 function applyAll(now = false)
@@ -75,18 +73,6 @@ function bake(name, def)
     b.copyToChannel(/** @type {Float32Array<ArrayBuffer>} */ (data), 0);
     buffers[name] = b;
 }
-async function decode(name)
-{
-    const s = samples[name];
-    if (!ctx || s.loading) return;
-    s.loading = true;
-    try
-    {
-        const data = await (await fetch(s.url)).arrayBuffer();
-        buffers[name] = await ctx.decodeAudioData(data);
-    }
-    catch (e) { console.warn('sound', name, e); }
-}
 for (const type of ['keydown', 'pointerdown']) addEventListener(type, ()=> { start(); ctx?.resume(); }, { capture: true });
 // a hidden tab goes quiet unless Play in the background is on; sound comes back with the tab (a phone may have
 // suspended it meanwhile)
@@ -107,15 +93,9 @@ export const sfx = {
         defs[name] = def;
         if (ctx) bake(name, def);
     },
-    // a recorded sound from a file, played with play() or loop() once it has loaded
-    load(name, url, level = 1)
-    {
-        samples[name] = { url, level };
-        if (ctx) decode(name);
-    },
     play(name, volume = 1, pitch = 1)
     {
-        const def = SFX_DEFS[name] ?? defs[name] ?? samples[name], buf = buffers[name];
+        const def = SFX_DEFS[name] ?? defs[name], buf = buffers[name];
         if (!def || !buf || !enabled) return;
         const now = ctx.currentTime;
         if (now - (last[name] ?? -9) < (def.gap ?? .03)) return;
@@ -146,7 +126,7 @@ export const sfx = {
             l = loops[name] = { src, g };
         }
         const t = ctx.currentTime;
-        l.g.gain.setTargetAtTime(volume * (samples[name]?.level ?? 1), t, .05);
+        l.g.gain.setTargetAtTime(volume * ((SFX_DEFS[name] ?? defs[name])?.level ?? 1), t, .05);
         l.src.playbackRate.setTargetAtTime(pitch, t, .05);
     },
 };

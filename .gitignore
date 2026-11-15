@@ -1,4 +1,6 @@
 node_modules/
+# 1.0.0's recordings, copied out of git by `just old-sounds`
+tools/old-sounds/
 .DS_Store
 
 # Claude Code: worktrees for isolated sessions, and personal settings

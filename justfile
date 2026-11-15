@@ -57,6 +57,17 @@ bench *args:
     @[ -d node_modules/playwright ] || just install-bench
     node tools/bench.mjs "$@"
 
+# measure every sound effect (length, attack, peak, loudness) and check each event in docs/sound.md has its sound
+sounds:
+    node tools/sound-report.mjs
+    node tools/sound-audit.mjs
+
+# copy 1.0.0's recorded sound effects out of git into tools/old-sounds/, for the sound board's comparison buttons
+old-sounds:
+    @mkdir -p tools/old-sounds
+    @for f in crash mote_chime pulse_loop release_snap swing_loop ui_select; do git show v1.0.0:assets/audio/$f.wav > tools/old-sounds/$f.wav; done
+    @echo "Open http://localhost:{{port}}/tools/sound-board.html under 'just serve'"
+
 # run the unit tests for lib/, *-data.js and the rules
 test:
     node --test

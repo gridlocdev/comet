@@ -19,7 +19,7 @@ export default {
             asking = true;
             showInitials({
                 start: save.lastName ?? 'AAA',
-                change: ()=> sfx.play('cometUi'),
+                change: ()=> sfx.play('letterChange'),
                 move: ()=> sfx.play('uiMove'),
                 done(name)
                 {

@@ -14,6 +14,8 @@ just lan             # serve the game to your Wi-Fi, to try it on a phone
 just check           # syntax-check every module, check the layer rules and type-check against jsconfig.json
 just test            # run the unit tests
 just dead            # list modules, exports and assets nothing uses (it only reports)
+just sounds          # measure every sound effect and check docs/sound.md against the code
+just old-sounds      # copy 1.0.0's recordings out of git for the sound board (tools/sound-board.html)
 just install         # install the pinned Playwright (only `just bench` needs it)
 just install-bench   # install Playwright and its Firefox build, about 100 MB, once per Playwright version
 just bench <runs>    # time frames in Playwright's Firefox, headless and muted

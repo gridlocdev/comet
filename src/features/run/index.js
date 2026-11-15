@@ -16,12 +16,8 @@ import { createWorld, reset, step } from '../../world/sim.js';
 import { score } from '../../world/score.js';
 import { pressWord, render, settingsWord } from './view.js';
 
-/** @type {Record<string, [file: string, level: number]>} each sound's file and level */
-const SOUNDS = {
-    cometSnap: ['release_snap.wav', .5], cometChime: ['mote_chime.wav', .45], cometCrash: ['crash.wav', .6],
-    cometUi: ['ui_select.wav', .4], cometSwing: ['swing_loop.wav', .35], cometPulse: ['pulse_loop.wav', .4],
-};
-const SFX_NAME = { snap: 'cometSnap', chime: 'cometChime', crash: 'cometCrash' };
+// the run's sound for each sound the rules queue
+const SFX_NAME = { snap: 'release', chime: 'mote', crash: 'crash' };
 
 // the swing loop's pitch follows speed, the pulse loop's follows the run's clock
 const map = (x, a, b, c, d)=> c + (Math.max(a, Math.min(b, x)) - a) / (b - a) * (d - c);
@@ -55,14 +51,14 @@ function showTouch(pausable)
 
 function startRun()
 {
-    sfx.play('cometUi');
+    sfx.play('runStart');
     reset(world);
     acc = 0; pressHeld = false;
     setMode('play');
     showTouch(true);
 }
 
-function quiet() { sfx.loop('cometSwing', 0); sfx.loop('cometPulse', 0); }
+function quiet() { sfx.loop('swingLoop', 0); sfx.loop('pulseLoop', 0); }
 
 function showPause(focus = 0)
 {
@@ -116,7 +112,7 @@ function openSettings(from)
     touch.show(false);
     showSettings({
         color: 'var(--cyan)',
-        sound: (what)=> sfx.play(what === 'move' ? 'uiMove' : what === 'pick' ? 'uiPick' : 'cometChime'),
+        sound: (what)=> sfx.play(what === 'move' ? 'uiMove' : what === 'pick' ? 'uiPick' : 'mote'),
         close()
         {
             if (settingsFrom === 'paused') { showPause(1); return; }
@@ -152,8 +148,8 @@ function playSounds()
     world.sfx.length = 0;
     const p = world.player;
     const live = mode === 'play' && world.life !== 'dead' && !world.gameOver;
-    sfx.loop('cometSwing', live && p.latched ? 1 : 0, swingPitch(p.v));
-    sfx.loop('cometPulse', live ? 1 : 0, pulsePitch(world.t));
+    sfx.loop('swingLoop', live && p.latched ? 1 : 0, swingPitch(p.v));
+    sfx.loop('pulseLoop', live ? 1 : 0, pulsePitch(world.t));
 }
 
 // a simple pilot for screenshots: swing about half a turn, let go, catch the next anchor in reach
@@ -172,7 +168,6 @@ export default {
         ctx = c;
         world = createWorld();
         c.events.on('scores-done', ()=> { if (mode === 'scores') toMenu(); });
-        for (const [name, [file, level]] of Object.entries(SOUNDS)) sfx.load(name, `assets/audio/${file}`, level);
         // the touch pause button pauses a run, and on the title opens the settings
         touch.onPause(()=> { if (mode === 'play') showPause(); else if (mode === 'menu') openSettings('menu'); });
         toMenu();

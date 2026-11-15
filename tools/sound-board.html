@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sound board</title>
+<!-- Plays every sound effect from src/audio/sfx-defs.js next to the sentence that says what it's for, at the pitches
+     the game plays it. Not part of the game. Run `just serve` and open http://localhost:8142/tools/sound-board.html
+     (ES modules don't load from file://). The "1.0.0" buttons play the recordings 1.0.0 shipped, for comparison; run
+     `just old-sounds` once to copy them out of git into tools/old-sounds/. -->
+<style>
+    body { font: 15px/1.4 system-ui, sans-serif; margin: 16px; background: #000; color: #e8e8f0; }
+    h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: #8a8aa0; margin: 24px 0 8px; }
+    .row { display: flex; gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid #222; flex-wrap: wrap; }
+    .name { font-weight: 600; min-width: 9em; }
+    .says { flex: 1 1 100%; color: #b8b8c8; }
+    .old { color: #f0c060; }
+    button { font: inherit; padding: 4px 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: inherit; cursor: pointer; }
+    button:hover { background: #222; }
+    #note { color: #8a8aa0; }
+</style>
+</head>
+<body>
+<p>Each ▶ plays the sound at its mix level and one of the pitches the game uses. The gold "1.0.0" button next to it plays
+the recording 1.0.0 shipped at the same pitch: the two should sound the same. Loops play for a second.</p>
+<p id="note"></p>
+<div id="board"></div>
+<script type="module">
+import { RATE } from '../src/lib/synth.js';
+import { SFX_DEFS } from '../src/audio/sfx-defs.js';
+
+// the pitches each sound is played at (src/world/), and 1.0.0's recording of it
+const PITCHES = {
+    release: [1, .7, .5], mote: [1, 1.15, 1.3, 1.5, 2], crash: [1],
+    swingLoop: [.7, 1, 2], pulseLoop: [1, 1.6, 2.2],
+};
+const OLD = {
+    release: 'release_snap', mote: 'mote_chime', crash: 'crash', swingLoop: 'swing_loop', pulseLoop: 'pulse_loop',
+    runStart: 'ui_select', letterChange: 'ui_select',
+};
+
+const ctx = new AudioContext();
+const buffers = {}, old = {};
+function buffer(name)
+{
+    if (!buffers[name])
+    {
+        const s = SFX_DEFS[name].make();
+        buffers[name] = ctx.createBuffer(1, s.length, RATE);
+        buffers[name].copyToChannel(s, 0);
+    }
+    return buffers[name];
+}
+async function oldBuffer(name)
+{
+    if (!(name in old))
+    {
+        const res = await fetch(`old-sounds/${OLD[name]}.wav`);
+        old[name] = res.ok ? await ctx.decodeAudioData(await res.arrayBuffer()) : null;
+        if (!res.ok) document.getElementById('note').textContent = 'No 1.0.0 recordings found: run `just old-sounds` first.';
+    }
+    return old[name];
+}
+// both at the sound's level, as the game plays them
+function start(buf, pitch, def)
+{
+    if (!buf) return;
+    const src = ctx.createBufferSource(), gain = ctx.createGain();
+    src.buffer = buf; src.loop = !!def.loop;
+    src.playbackRate.value = pitch;
+    gain.gain.value = def.level ?? 1;
+    src.connect(gain).connect(ctx.destination);
+    src.start();
+    if (def.loop) src.stop(ctx.currentTime + 1);
+}
+function button(text, onClick, cls)
+{
+    const b = document.createElement('button');
+    b.textContent = text;
+    if (cls) b.className = cls;
+    b.onclick = ()=> { ctx.resume(); onClick(); };
+    return b;
+}
+
+const families = {};
+for (const [name, def] of Object.entries(SFX_DEFS)) (families[def.family ?? 'other'] ??= []).push(name);
+const board = document.getElementById('board');
+for (const [family, names] of Object.entries(families))
+{
+    const h = document.createElement('h2');
+    h.textContent = family;
+    board.append(h);
+    for (const name of names)
+    {
+        const def = SFX_DEFS[name];
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = `<span class="name"></span>`;
+        row.querySelector('.name').textContent = name;
+        for (const p of PITCHES[name] ?? [1])
+        {
+            const label = p === 1 ? '' : ` ×${p}`;
+            row.append(button(`▶${label}`, ()=> start(buffer(name), p, def)));
+            if (OLD[name]) row.append(button(`1.0.0${label}`, async ()=> start(await oldBuffer(name), p, def), 'old'));
+        }
+        const says = document.createElement('span');
+        says.className = 'says';
+        says.textContent = def.says ?? '';
+        row.append(says);
+        board.append(row);
+    }
+}
+</script>
+</body>
+</html>
