@@ -1,30 +1,28 @@
 # Comet
 
-A one-button swing game in the browser. Hold to latch onto the nearest anchor and swing round it, let go to fly off. Chain good swings for a bigger multiplier, catch motes for points, speed and extra lives, and stay clear of the deadly edge as it closes in. Three lives, and a top-ten table with your initials.
+A one-button swing game in the browser. Hold to latch onto an anchor and swing round it, let go to fly off, and stay clear of the deadly edge as it closes in.
 
-## Run it
+![Comet mid-swing: a black 16:9 field inside a thin frame. The white comet swings round the centre anchor on a short tether, leaving a pale blue arc. Eight more blue anchor rings and five yellow motes are spread around it. The HUD shows the score, a x1.0 multiplier, motes to the next extra life, the high score and three lives.](docs/images/comet.webp)
 
-It's plain ES modules with no build step and no dependencies, served from any static server:
+- **One button.** Hold **SWING** to latch onto the nearest anchor, and let go to fly off along the swing.
+- **Chain your swings.** Good swings build a chain that multiplies your score, up to x4; motes give points, speed and extra lives.
+- **The edge closes in.** The deadly edge creeps in from every side, anchors shrink and hazards appear the longer you last.
+
+## Getting started
+
+Play it in the browser at [gridloc.dev/games/comet](https://gridloc.dev/games/comet/), or run it from source:
 
 ```bash
-just serve
+just play   # serve on http://localhost:8142 and open it
 ```
 
-Then open http://localhost:8142. (Without `just`: `python3 -m http.server 8142`.)
+See [Getting started](docs/getting-started.md) for other ways to run it, including on a phone.
 
-## Controls
+## Learn more
 
-| | Keyboard and mouse | Gamepad | Touch |
-|---|---|---|---|
-| Start, swing (hold) | Space, J, Shift or the mouse button | A or right trigger | SWING |
-| Prefer the anchor that way | WASD or arrows | Left stick or d-pad | Stick |
-| Pause | Esc or P | Start | Pause button |
-| Menus | Arrows, Enter or Space, Esc to go back | D-pad or stick, A, B | Tap |
+- [Features](docs/features.md) · [Controls](docs/controls.md)
+- [All documentation](docs/README.md) · [Working on the code](docs/development.md)
 
-## Credits
+## License
 
-Comet is a port of its first version, Comet2D (C# and raylib), keeping its rules, numbers, look and sounds. Menu fonts: Bangers, Monoton and Chakra Petch (licences in `assets/fonts/`).
-
-## For developers
-
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+[MIT](LICENSE). The menu fonts have their own licenses, listed in [Credits](docs/credits.md).
