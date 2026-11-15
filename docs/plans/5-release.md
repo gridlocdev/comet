@@ -2,9 +2,9 @@
 
 ## Where things stand
 
-1.0.0 shipped. Since then, for the next build: the code split by layer, the standard settings (from the title and the pause menu), every sound effect made from code and then softened, a lead-free soundtrack, graphics quality presets with a frame-rate watchdog, a web manifest and home-screen icons, menus and the field's words in a light system font (the pixel font is gone), reach rings round the anchors, rocks in place of the hazard bars (placed fairly), and the dev rooms (`?debug&room=hub`). Everything was checked headless, in numbers and screenshots; nothing has been heard or played by hand yet.
+1.1.0 shipped on 2026-11-15 ([release](https://github.com/gridlocdev/comet/releases/tag/v1.1.0), live at [gridloc.dev/games/comet](https://gridloc.dev/games/comet/)). It holds, since 1.0.0: the code split by layer, the standard settings (from the title and the pause menu), every sound effect made from code and then softened, a lead-free soundtrack, graphics quality presets with a frame-rate watchdog, a web manifest and home-screen icons, menus and the field's words in a light system font (the pixel font is gone), reach rings round the anchors, rocks in place of the hazard bars (placed fairly), and the dev rooms (`?debug&room=hub`). Everything was checked headless, in numbers and screenshots; nothing has been heard or played by hand yet.
 
-Next: the checks under For you. When they pass, tag the build (1.1.0) and deploy it to gridloc.dev.
+It went out before the checks under For you were played, at your request. Next: play them on the live build or locally; anything they turn up goes into a 1.1.1 patch.
 
 ## For you
 
@@ -44,7 +44,7 @@ Next: the checks under For you. When they pass, tag the build (1.1.0) and deploy
 
 ### Choices made without the user
 
-- Stage: Release. 1.0.0 shipped, so every stage is done and the work since is for the next tagged build; this plan is the tracker until it ships.
+- Stage: Release. 1.0.0 and 1.1.0 shipped, so every stage is done; this plan tracks the checks and fixes for the next patch.
 - Reach rings: drawn while flying only (not while swinging, where the next reach depends on where you let go), for every live anchor up to 1.5× the reach; muted green, amber and rose, faint except the bold one; no setting to turn them off yet.
 - Menus: the system font in a light weight, uppercase banners spaced wide, 1 px lines in the field's frame colour, the anchor's cyan for focus, and banners that fade in. Written into `src/ui/style.css`.
 
