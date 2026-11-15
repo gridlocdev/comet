@@ -18,6 +18,7 @@ Comet was a cabinet in a walkable 3D arcade; it is now its own game. Decided: pl
 - [ ] Try the settings (http://localhost:8142/?debug&shot=settings): each tab, the bars with keys, mouse and a pad, Reset to defaults, and Back. Do Brightness, Show frame rate, Reduce flashing (crash, respawn blink, a tether about to snap) and Game speed 50% do what they say?
 - [ ] Pause a run (http://localhost:8142/?debug&shot=pause): Continue, Settings, Restart and Quit to title, with their No/Yes questions.
 - [ ] Listen on the sound board (`just old-sounds`, `just serve`, then http://localhost:8142/tools/sound-board.html): each sound's ▶ next to its gold 1.0.0 button at every pitch. They match sample for sample in numbers; do they sound the same? Then play a run and listen for any click where the swing and pulse loops repeat.
+- [ ] Listen to the soundtrack (http://localhost:8142): the title and run tracks are lead-free backing tracks (pad, arp, bass; a light kit in the run). Are they chill enough, or too empty? Does the music sit under the swing hum and the rising drone, or fight them? Does the run's track change on a beat when you start, and does the game-over sting cut straight in? Pause: the music should dip and keep going. Settings, Audio: Music off, then on; Music volume.
 - [ ] Listen: Master and Effects volume at the defaults should sound exactly as loud as before; Mono audio and Play in the background.
 
 ## Follow-ups

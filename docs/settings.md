@@ -24,6 +24,7 @@ Ranges are `min–max, step`.
 | Id | Type | Range or options | Default | Applied in |
 | --- | --- | --- | --- | --- |
 | `audio.master` | range | 0–1, 0.05 | 0.8 | master gain, `audio/sfx.js` (squared, so the slider sounds even) |
+| `audio.musicOn` | toggle | on/off | on | Comet's own: the soundtrack on or off, apart from its volume; `audio/music.js` |
 | `audio.music` | range | 0–1, 0.05 | 0.7 | music bus, `audio/music.js` |
 | `audio.sfx` | range | 0–1, 0.05 | 0.8 | effects bus, `audio/sfx.js` |
 | `audio.mono` | toggle | | off | master folded to one channel |

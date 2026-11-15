@@ -9,6 +9,10 @@ import { input } from '../platform/input.js';
 import { events } from './events.js';
 import { state } from './state.js';
 
+// Comet's one addition: Music on or off, apart from its volume, so the soundtrack can go and the effects stay
+const MUSIC_ON = { id: 'audio.musicOn', group: 'audio', type: 'toggle', label: 'Music', default: true,
+    help: 'The soundtrack. Effects keep playing.' };
+
 // what Comet doesn't have: no difficulty presets, one button so nothing to toggle, no rumble, no camera to shake,
 // one fixed look with no quality levels, no dialogue, and words drawn in one pixel font at one size and palette
 export const SCHEMA = defineSettings({
@@ -19,6 +23,8 @@ export const SCHEMA = defineSettings({
         'a11y.textScale', 'a11y.subtitles', 'a11y.captions', 'a11y.shake', 'a11y.highContrast', 'a11y.plainFont',
     ],
 });
+// shown just above Music volume
+SCHEMA.splice(SCHEMA.findIndex((s)=> s.id === 'audio.music'), 0, MUSIC_ON);
 export const TAGS = ['gamepad'];
 
 const media = (q)=> globalThis.matchMedia?.(q).matches ?? false;

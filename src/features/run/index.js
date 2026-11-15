@@ -6,6 +6,7 @@ import { FLAGS } from '../../platform/engine.js';
 import { loop } from '../../game/loop.js';
 import { input } from '../../platform/input.js';
 import { sfx } from '../../audio/sfx.js';
+import { musicCutIn, setMusicArea, setMusicDuck } from '../../audio/music.js';
 import { cards } from '../../ui/cards.js';
 import { letterIn, spellOut } from '../../ui/kinetic.js';
 import { showSettings } from '../../ui/settings-screen.js';
@@ -33,7 +34,17 @@ let world = null, ctx = null;
 let finalScore = 0, newBest = false;
 let bot = null;
 
-function setMode(m) { mode = m; modeTime = 0; }
+// the music dips under the pause menu and its settings, and keeps going
+function setMode(m) { mode = m; modeTime = 0; setMusicDuck(m === 'paused' || m === 'settings' && settingsFrom === 'paused' ? .4 : 1); }
+
+// the soundtrack follows the screen: the title's track on the title and its settings, the run's under play and pause,
+// and the game-over sting once, then quiet until the title (music/, from tools/music/songs.js)
+function musicFor()
+{
+    if (mode === 'play' || mode === 'paused' || mode === 'settings' && settingsFrom === 'paused') return 'play';
+    if (mode === 'over' || mode === 'scores') return 'over';
+    return 'title';
+}
 
 // the title: the SWING button starts a run, so the touch controls show without pause
 function toMenu()
@@ -167,6 +178,8 @@ export default {
     {
         ctx = c;
         world = createWorld();
+        setMusicArea(musicFor);
+        musicCutIn('over');     // the run's end stops the run's music at once, with no wait for the bar
         c.events.on('scores-done', ()=> { if (mode === 'scores') toMenu(); });
         // the touch pause button pauses a run, and on the title opens the settings
         touch.onPause(()=> { if (mode === 'play') showPause(); else if (mode === 'menu') openSettings('menu'); });

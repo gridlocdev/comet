@@ -9,6 +9,7 @@
     "check": "node tools/coupling-report.mjs --strict && tsc -p jsconfig.json"
   },
   "devDependencies": {
+    "electron": "44.9.2",
     "playwright": "1.65.0",
     "typescript": "6.0.3"
   }

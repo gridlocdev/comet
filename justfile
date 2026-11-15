@@ -1,4 +1,5 @@
 port := "8142"
+music_generator := "../../apps/music-generator"
 
 # list recipes
 default:
@@ -61,6 +62,12 @@ bench *args:
 sounds:
     node tools/sound-report.mjs
     node tools/sound-audit.mjs
+
+# render the soundtrack (tools/music/songs.js) with music-generator into music/ and src/audio/tracks-data.js
+# needs ffmpeg and a music-generator checkout; e.g. just music ~/src/apps/music-generator play over
+music path=music_generator *tracks:
+    @[ -d node_modules/electron ] || npm install
+    npx electron tools/music/render.mjs {{path}} {{tracks}}
 
 # copy 1.0.0's recorded sound effects out of git into tools/old-sounds/, for the sound board's comparison buttons
 old-sounds:

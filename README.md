@@ -25,4 +25,4 @@ See [Getting started](docs/getting-started.md) for other ways to run it, includi
 
 ## License
 
-[MIT](LICENSE). The menu fonts have their own licenses, listed in [Credits](docs/credits.md).
+[MIT](LICENSE). The menu fonts have their own licenses, listed in [Credits](docs/credits.md). The music is made with [music-generator](https://github.com/gridlocdev/music-generator).

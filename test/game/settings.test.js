@@ -29,15 +29,25 @@ test('only changed settings are saved', ()=>
     assert.deepEqual(JSON.parse(saved[KEY]).core.settings, { 'a11y.reduceFlashing': true });
 });
 
-test('the screen shows what Comet can apply: no difficulty, no shake, no text options', ()=>
+test('the screen shows what Comet can apply: Music on/off, no difficulty, no shake, no text options', ()=>
 {
     assert.deepEqual(settingTabs().map((t)=> t.group), ['audio', 'controls', 'display', 'a11y']);
     const ids = settingTabs().flatMap((t)=> t.rows.map((r)=> r.id));
     assert.deepEqual(ids, [
-        'audio.master', 'audio.music', 'audio.sfx', 'audio.mono', 'audio.background',
+        'audio.master', 'audio.musicOn', 'audio.music', 'audio.sfx', 'audio.mono', 'audio.background',
         'controls.deadzone',
         'display.brightness', 'display.showFps',
         'a11y.reduceFlashing', 'a11y.gameSpeed',
     ]);
     assert.ok(!SCHEMA.some((s)=> s.id === 'a11y.shake'));
+});
+
+test('Music off is its own setting, saved apart from the volume', ()=>
+{
+    loadSettings();
+    assert.equal(setting('audio.musicOn'), true);
+    changeSetting('audio.musicOn', false);
+    assert.equal(setting('audio.musicOn'), false);
+    assert.equal(setting('audio.music'), .7);
+    changeSetting('audio.musicOn', true);
 });

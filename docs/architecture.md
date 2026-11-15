@@ -18,7 +18,8 @@ src/
   ui/         cards (menus you move through with keys, a pad or a finger), initials (the three-letter entry), kinetic
               (banner lettering), hud, word-layer (pixel-font words on their own canvas), settings-screen, fps, touch controls,
               pixel-text (lib/pixel-font.js on a 2D canvas), style.css
-  audio/      sfx.js (Web Audio: baked UI sounds, loaded samples and loops), sfx-defs.js (the UI sounds as code)
+  audio/      sfx.js (Web Audio: buses, every effect baked from sfx-defs.js, held loops), music.js (the soundtrack,
+              changing on the bar), tracks-data.js (written by `just music`)
   features/
     run/      a run and the screens around it: index.js (title, play, pause, game over, sound), view.js (the frame)
     scores/   the top ten and the initials entry, and their save slice
@@ -56,7 +57,7 @@ Read this when changing the rules, the field's look or the screens.
 
 `render/field.js` draws a world with the 2D context: shapes in field units under a transform of `surface.scale`, back to front (the deadly edge and its frame, hazards, anchor rings, tether, motes, trail, 1UP ring, comet, crash flash). Words are drawn in the bitmap font of `lib/pixel-font.js` onto canvases of their own at the surface's real resolution (`ui/word-layer.js`), so every font pixel lands on whole device pixels, and only when their text changes: the HUD (`ui/hud.js`) at most about 15 times a second, the screens' messages and prompt in `features/run/view.js`. It keeps the first version's palette (`render/palette.js`) and layout, and nothing glows.
 
-`features/run/index.js` runs the screens: title (`menu`) → `play` → `paused` or `over`, and `settings` from the title or the pause menu. Closing the game-over screen emits `run-ended { score }`; `features/scores` asks for initials on a card when the score makes the ten, saves it in its `scores` slice and emits `scores-done`, and the run goes back to the title. The run reads the best score through the `best()` hook (`loop.sections('best')`). Its sounds are made from code in `audio/sfx-defs.js` (see [sound.md](sound.md)) and named in its `SFX_NAME` map; the swing and pulse loops run through `sfx.loop(name, volume, pitch)`, held at 0 when silent. Settings are the shared table (`lib/settings.js`) with Comet's changes in `game/settings.js`, saved in the `core` slice and shown by `ui/settings-screen.js`; see [settings.md](settings.md). The save is one localStorage key, `comet-save-v1`; 1.0.0's `comet` slice is moved to `scores` on load.
+`features/run/index.js` runs the screens: title (`menu`) → `play` → `paused` or `over`, and `settings` from the title or the pause menu. Closing the game-over screen emits `run-ended { score }`; `features/scores` asks for initials on a card when the score makes the ten, saves it in its `scores` slice and emits `scores-done`, and the run goes back to the title. The run reads the best score through the `best()` hook (`loop.sections('best')`). Its sounds are made from code in `audio/sfx-defs.js` (see [sound.md](sound.md)) and named in its `SFX_NAME` map; the swing and pulse loops run through `sfx.loop(name, volume, pitch)`, held at 0 when silent. The soundtrack (`audio/music.js`, [audio.md](audio.md)) plays the track the run's `musicFor` names, from `music/`. Settings are the shared table (`lib/settings.js`) with Comet's changes in `game/settings.js`, saved in the `core` slice and shown by `ui/settings-screen.js`; see [settings.md](settings.md). The save is one localStorage key, `comet-save-v1`; 1.0.0's `comet` slice is moved to `scores` on load.
 
 On a touch screen `ui/touch.js` shows a stick, the SWING button and, during a run, a pause button.
 
