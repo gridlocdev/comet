@@ -2,6 +2,7 @@
 // anchor and swing round it at a fixed radius, let go along the tangent. Scoring and crashing are the run's
 // (world/sim.js); these only move the comet and rest the anchor it leaves.
 import { CONFIG, SCREEN } from '../world/comet-data.js';
+import { segmentDistance } from '../world/hazards.js';
 
 const CX = SCREEN.w / 2, CY = SCREEN.h / 2;
 
@@ -43,7 +44,11 @@ export function beginSpawn(w, initial)
     const c = w.cfg, p = w.player;
     const idx = nearestAnchorToCentre(w);
     const r = Math.max(c.rMin, c.spawnRadius);
-    const theta = w.rng.range(0, Math.PI * 2);
+    const a = w.anchors[idx];
+    // a direction whose drift through the middle (on to 400 px past it) misses every rock; the first try is kept
+    // when there are none, so a run with no rocks replays as before
+    let theta = w.rng.range(0, Math.PI * 2);
+    for (let i = 0; i < 16 && !clearDrift(w, a.x + r * Math.cos(theta), a.y + r * Math.sin(theta)); i++) theta = w.rng.range(0, Math.PI * 2);
     p.v = initial ? c.vSpawn : c.vMin;
     p.vx = p.vy = 0;
     p.latched = false; p.anchor = -1; p.r = r; p.swept = 0;
@@ -54,6 +59,13 @@ export function beginSpawn(w, initial)
     w.anchors[idx].dormantUntil = w.t;
     w.launchAt = w.t + w.rng.range(c.spawnDelayMin, c.spawnDelayMax);
     w.life = 'spawning';
+}
+
+// whether a comet launched from (x, y) toward the middle passes every rock with room to spare
+function clearDrift(w, x, y)
+{
+    const dx = CX - x, dy = CY - y, d = Math.hypot(dx, dy) || 1;
+    return w.hazards.every((h)=> segmentDistance(h.x, h.y, x, y, CX + dx / d * 400, CY + dy / d * 400) > h.r + 40);
 }
 
 export function launch(w)

@@ -14,7 +14,11 @@ export const CONFIG = {
     swingScore: 100, scoreRate: .5,
     chainTier: 4, chainMultStep: .5, chainMultMax: 4.0,
     borderRate: 1.0, borderMax: 230,
-    hazardInterval: 30, hazardMax: 6, hazardW: 64, hazardH: 12,
+    // rocks: one every hazardInterval s of flight, up to hazardMax, hazardR across; harmless for hazardArrive s while
+    // they fade in; never within hazardClearSpawn of the middle anchor (where the comet respawns), hazardClearAnchor of
+    // another anchor, or hazardClearComet of the comet or the next second of its path
+    hazardInterval: 30, hazardMax: 6, hazardR: 14, hazardArrive: 1.2,
+    hazardClearSpawn: 210, hazardClearAnchor: 72, hazardClearComet: 160,
     invulnTime: 1.2, lives: 3, maxLives: 9, prngSeed: 12345,
     spawnRadius: 50, spawnDelayMin: .35, spawnDelayMax: 1.0,
     maxSwingRotations: 4,

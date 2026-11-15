@@ -18,7 +18,7 @@ Motes give points, speed and extra lives. The HUD shows how many motes are left 
 
 ## It gets harder
 
-The deadly edge creeps in from every side. Anchors rest longer after you use them and their reach shrinks. A new hazard bar appears every 30 seconds.
+The deadly edge creeps in from every side. Anchors rest longer after you use them and their reach shrinks. A new rock fades in every 30 seconds: harmless while it arrives, and never where the comet respawns or right in front of it.
 
 ## High scores
 

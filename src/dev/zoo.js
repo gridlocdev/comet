@@ -44,7 +44,8 @@ function fieldWorld(key)
         case 'tether': at = [640, 360]; tick = swing(0); break;
         case 'tetherStrain': at = [640, 360]; tick = swing(.7); break;
         case 'tetherSnap': at = [640, 360]; tick = swing(.95); break;
-        case 'hazard': w.hazards = [{ x: 608, y: 354, w: CONFIG.hazardW, h: CONFIG.hazardH }]; p.x = 700; break;
+        case 'hazard': w.hazards = [{ x: 640, y: 360, r: CONFIG.hazardR, bornAt: -10 }]; p.x = 700; tick = (time)=> { w.t = time % 1; }; break;
+        case 'hazardArriving': w.hazards = [{ x: 640, y: 360, r: CONFIG.hazardR, bornAt: 0 }]; p.x = 700; tick = (time)=> { w.t = time % (CONFIG.hazardArrive + 1); }; break;
         case 'edge': w.t = 100; p.x = 160; p.y = 160; at = [110, 110]; break;
         case 'oneUp': at = [690, 360]; tick = (time)=> { w.lifeFlash = LIFE_FLASH - Math.floor(time * 60) % LIFE_FLASH; }; break;
         case 'perfect': at = [690, 360]; w.perfectFlash = 6; break;

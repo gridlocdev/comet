@@ -18,7 +18,7 @@ Hold: grab the nearest resting-free anchor in reach (the stick picks the one mos
     },
     {
         id: 'closing', title: 'The arena closes in',
-        text: `Five minutes of a run in fifteen seconds, the comet left out. The red edge creeps in ${c.borderRate} px a second to ${c.borderMax} px; a hazard bar appears every ${c.hazardInterval} s, up to ${c.hazardMax}, clear of the middle and the anchors; each anchor's reach (the rings) shrinks from ${c.latchRangeBase} to ${c.latchRangeMin} px, and its rest after use grows from ${c.anchorCooldownBase} to ${c.anchorCooldownMax} s.`,
+        text: `Five minutes of a run in fifteen seconds, the comet left out. The red edge creeps in ${c.borderRate} px a second to ${c.borderMax} px; a rock fades in every ${c.hazardInterval} s, up to ${c.hazardMax}, clear of the respawn anchor, the anchors and the comet; each anchor's reach (the rings) shrinks from ${c.latchRangeBase} to ${c.latchRangeMin} px, and its rest after use grows from ${c.anchorCooldownBase} to ${c.anchorCooldownMax} s.`,
         wrong: swallowed.length
             ? `An anchor nearer the side than ${c.borderMax} px is swallowed late in a run: here ${swallowed.length} of ${LEVEL.anchors.length}, from ${[...new Set(swallowed.map((a)=> minutes(a.d / c.borderRate)))].sort().join(' and ')} of flight (red). Place one there only to shrink the arena on purpose.`
             : `Every anchor stays clear of the edge's ${c.borderMax} px.`,

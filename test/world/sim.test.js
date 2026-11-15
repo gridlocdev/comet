@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { CONFIG, LEVEL, SCREEN } from '../../src/world/comet-data.js';
 import { createWorld, reset, step } from '../../src/world/sim.js';
 import { mult, score } from '../../src/world/score.js';
-import { border } from '../../src/world/hazards.js';
+import { border, segmentDistance } from '../../src/world/hazards.js';
 import { anchorCooldown, latchRange, latchTarget, swingLimit } from '../../src/player/comet.js';
 import { findMoteSpawn, motesToNextLife } from '../../src/world/motes.js';
 
@@ -176,16 +176,46 @@ test('motes give points and speed, and extra lives at 3, 7, 12 and 18', ()=>
     assert.equal(motesToNextLife(w), 7);
 });
 
-test('a hazard appears after 30 seconds, clear of the middle and the anchors', ()=>
+test('a rock appears after 30 seconds, clear of the respawn anchor, the anchors and the comet', ()=>
 {
-    const w = placed(640, 300, 0, 0);
-    w.t = 29.99;
+    for (const [x, y, vx, vy] of [[640, 300, 0, 0], [300, 600, 200, 0], [1000, 150, -150, 150]])
+    {
+        const w = placed(x, y, vx, vy);
+        w.t = 29.99;
+        step(w, DT, false, false);
+        assert.equal(w.hazards.length, 1);
+        const h = w.hazards[0], c = w.cfg;
+        assert.ok(Math.hypot(h.x - 640, h.y - 360) >= c.hazardClearSpawn);
+        for (const a of w.anchors) assert.ok(Math.hypot(h.x - a.x, h.y - a.y) >= c.hazardClearAnchor);
+        assert.ok(Math.hypot(h.x - w.player.x, h.y - w.player.y) >= c.hazardClearComet);
+    }
+});
+
+test('a new rock is harmless while it fades in, then crashes the comet', ()=>
+{
+    const w = placed(400, 600, 0, 0);
+    Object.assign(w.player, { invulnUntil: 0 });
+    w.t = 50;
+    w.hazards = [{ x: 400, y: 600, r: CONFIG.hazardR, bornAt: 50 }];
     step(w, DT, false, false);
-    assert.equal(w.hazards.length, 1);
-    const h = w.hazards[0];
-    const mx = h.x + h.w / 2, my = h.y + h.h / 2;
-    assert.ok(Math.hypot(mx - 640, my - 360) >= 60);
-    for (const a of w.anchors) assert.ok(Math.hypot(mx - a.x, my - a.y) >= 60);
+    assert.equal(w.life, 'active');
+    w.t = 50 + CONFIG.hazardArrive;
+    step(w, DT, false, false);
+    assert.equal(w.life, 'dead');
+});
+
+test('a respawn drifts on a line that misses every rock', ()=>
+{
+    for (let seed = 1; seed < 40; seed++)
+    {
+        const w = createWorld({ ...CONFIG, prngSeed: seed });
+        // rocks ringed round the middle with one gap
+        w.hazards = Array.from({ length: 7 }, (_, i)=> ({ x: 640 + 230 * Math.cos(i), y: 360 + 230 * Math.sin(i), r: CONFIG.hazardR, bornAt: -9 }));
+        w.life = 'dead';
+        step(w, DT, false, true);
+        const p = w.player, d = Math.hypot(640 - p.x, 360 - p.y), ex = 640 + (640 - p.x) / d * 400, ey = 360 + (360 - p.y) / d * 400;
+        for (const h of w.hazards) assert.ok(segmentDistance(h.x, h.y, p.x, p.y, ex, ey) > h.r + 40, `seed ${seed}`);
+    }
 });
 
 test('a respawned mote lands inside the edge and off the anchors', ()=>

@@ -75,7 +75,7 @@ export function findMoteSpawn(w)
         if (x < x0 || x > x1 || y < y0 || y > y1) continue;
         if (dist(x, y, CX, CY) < 40) continue;
         if (w.anchors.some((a)=> dist(x, y, a.x, a.y) < c.anchorRadius + c.moteRadius + 6)) continue;
-        if (w.hazards.some((h)=> x > h.x - pad && x < h.x + h.w + pad && y > h.y - pad && y < h.y + h.h + pad)) continue;
+        if (w.hazards.some((h)=> Math.hypot(x - h.x, y - h.y) < h.r + pad)) continue;
         return { x, y };
     }
     return { x: CX, y: CY };

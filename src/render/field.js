@@ -1,8 +1,8 @@
 // The play field, drawn with the 2D canvas in field units (1280 × 720, y down, as the rules use) under a transform the
-// caller sets. Back to front: the deadly edge and its frame, hazards, reach rings, anchor rings, tether, motes, trail, 1UP ring,
+// caller sets. Back to front: the deadly edge and its frame, rocks, reach rings, anchor rings, tether, motes, trail, 1UP ring,
 // comet, crash flash. Thin lines and flat colours, nothing glowing. The dev rooms can switch the colours to a check view.
 import { CONFIG, SCREEN } from '../world/comet-data.js';
-import { border } from '../world/hazards.js';
+import { border, hazardArmed } from '../world/hazards.js';
 import { isLive, latchRange, latchTarget, swingWarn } from '../player/comet.js';
 import { LIFE_FLASH } from '../world/motes.js';
 import { setting } from '../game/settings.js';
@@ -51,8 +51,7 @@ export function drawField(g, w)
     g.fillStyle = C.frame;
     outline(g, b, b, W - 2 * b, H - 2 * b, 2);
 
-    g.fillStyle = C.hazard;
-    for (const h of w.hazards) g.fillRect(h.x, h.y, h.w, h.h);
+    w.hazards.forEach((h, i)=> rock(g, w, h, i, C));
 
     reachRings(g, w, C);
 
@@ -166,3 +165,25 @@ function reachRings(g, w, C)
 }
 const REACH_FADE = 1.5;     // past this share of the reach, no ring
 const REACH_EASE = .15;     // share of the way to its aim a ring's opacity moves each frame (about a sixth of a second)
+
+// A rock: a lumpy outline in the danger colour round a dark core, turning slowly, its shape fixed by its place in the
+// list so the rules' random numbers stay as they were. While it arrives it grows in from a faint dot and can't hurt.
+const ROCK_SIDES = 9;
+function rock(g, w, h, i, C)
+{
+    const arrive = Math.min(1, (w.t - h.bornAt) / w.cfg.hazardArrive), armed = hazardArmed(w, h);
+    const size = h.r * (.4 + .6 * arrive), spin = (i % 2 ? 1 : -1) * (.25 + .05 * i) * w.t + i;
+    g.beginPath();
+    for (let k = 0; k < ROCK_SIDES; k++)
+    {
+        const a = spin + k / ROCK_SIDES * Math.PI * 2;
+        const bump = .62 + .38 * Math.abs(Math.sin(k * 2.3 + i * 1.9));      // 0.62–1 of the size, the same every frame
+        const x = h.x + Math.cos(a) * size * bump, y = h.y + Math.sin(a) * size * bump;
+        if (k) g.lineTo(x, y); else g.moveTo(x, y);
+    }
+    g.closePath();
+    g.globalAlpha = armed ? 1 : .25 + .5 * arrive;
+    g.fillStyle = C.rockCore; g.fill();
+    g.strokeStyle = C.hazard; g.lineWidth = armed ? 1.5 : 1; g.stroke();
+    g.globalAlpha = 1;
+}
