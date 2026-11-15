@@ -12,6 +12,7 @@ import { insertScore, pulsePitch, qualifies, swingPitch, topScore } from './come
 import { createWorld, reset, score, step } from './sim.js';
 import { pressWord, render } from './view.js';
 
+/** @type {Record<string, [file: string, level: number]>} each sound's file and level */
 const SOUNDS = {
     cometSnap: ['release_snap.wav', .5], cometChime: ['mote_chime.wav', .45], cometCrash: ['crash.wav', .6],
     cometUi: ['ui_select.wav', .4], cometSwing: ['swing_loop.wav', .35], cometPulse: ['pulse_loop.wav', .4],

@@ -22,7 +22,7 @@ function steer(e)
 const release = ()=> { stickId = null; touchState.mx = touchState.my = 0; knob.style.transform = ''; };
 stick.addEventListener('pointerdown', (e)=> { e.preventDefault(); stickId = e.pointerId; stick.setPointerCapture(e.pointerId); steer(e); });
 stick.addEventListener('pointermove', (e)=> { if (e.pointerId === stickId) steer(e); });
-for (const t of ['pointerup', 'pointercancel']) stick.addEventListener(t, (e)=> { if (e.pointerId === stickId) release(); });
+for (const t of /** @type {const} */ (['pointerup', 'pointercancel'])) stick.addEventListener(t, (e)=> { if (e.pointerId === stickId) release(); });
 
 hold.addEventListener('pointerdown', (e)=> { e.preventDefault(); hold.setPointerCapture(e.pointerId); touchState.hold = true; touchState.holdPressed = true; });
 for (const t of ['pointerup', 'pointercancel']) hold.addEventListener(t, ()=> { touchState.hold = false; });

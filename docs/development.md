@@ -11,7 +11,7 @@ just                 # list the recipes
 just serve           # serve the game on http://localhost:8142
 just play            # serve the game and open it in your browser
 just lan             # serve the game to your Wi-Fi, to try it on a phone
-just check           # syntax-check every module and check the layer rules
+just check           # syntax-check every module, check the layer rules and type-check against jsconfig.json
 just test            # run the unit tests
 just dead            # list modules, exports and assets nothing uses (it only reports)
 just install         # install the pinned Playwright (only `just bench` needs it)
@@ -26,7 +26,7 @@ The game must be served over HTTP; ES modules don't load from `file://`. Without
 Run both after every change:
 
 ```bash
-just check   # syntax and layer rules, through tools/coupling-report.mjs and architecture.json
+just check   # syntax, layer rules (tools/coupling-report.mjs, architecture.json) and types (jsconfig.json)
 just test    # unit tests for lib/, *-data.js, the sim and the rules
 ```
 

@@ -43,6 +43,8 @@ lan:
 check:
     @for f in $(find src -name '*.js'); do node --check "$f" || exit 1; done
     node tools/coupling-report.mjs --strict
+    @test -x node_modules/.bin/tsc || npm install
+    node_modules/.bin/tsc -p jsconfig.json
 
 # list modules, exports and assets nothing uses (it reports; it never deletes)
 dead:

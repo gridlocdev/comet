@@ -32,7 +32,7 @@ src/
 
 ## Checking
 
-`just check` (syntax and layer rules, through `tools/coupling-report.mjs` and `architecture.json`) and `just test`. `just dead` lists modules, exports and assets nothing uses; it only reports.
+`just check` (syntax, layer rules through `tools/coupling-report.mjs` and `architecture.json`, and types: `tsc` checks the plain JavaScript and its JSDoc against `jsconfig.json`, emitting nothing) and `just test`. `just dead` lists modules, exports and assets nothing uses; it only reports.
 
 `just bench` times frames in Playwright's Firefox, pinned through `package.json` (`just install-bench` once): headless, muted, a fresh profile, at 1440x900 and pixel ratio 2 unless `--size` and `--dpr` say otherwise. Each argument is a run (`"debug&shot=bot"`); add `|js` to run code in the page before timing, `--repeat 2` to interleave runs through a busy machine, and `--shots DIR` to save a screenshot of each. It prints page and console errors as they happen. 60 fps with p95 under ~18 ms is healthy.
 

@@ -6,9 +6,10 @@
   "scripts": {
     "start": "python3 -m http.server 8142",
     "test": "node --test",
-    "check": "node tools/coupling-report.mjs --strict"
+    "check": "node tools/coupling-report.mjs --strict && tsc -p jsconfig.json"
   },
   "devDependencies": {
-    "playwright": "1.65.0"
+    "playwright": "1.65.0",
+    "typescript": "6.0.3"
   }
 }
