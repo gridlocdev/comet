@@ -1,9 +1,8 @@
 // The HUD along the top of a run: score, best, lives, multiplier, motes to the next life and the run's clock, in the
 // pixel font on its own layer. The score ticks every step, so it redraws about 15 times a second, but at once when a
 // life comes or goes.
-import { mult } from '../world/comet-data.js';
 import { motesToNextLife } from '../world/motes.js';
-import { score } from '../world/sim.js';
+import { mult, score } from '../world/score.js';
 import { C } from '../render/palette.js';
 import { centre, clear, dot, fitLayer, rightAt, text, wordLayer } from './word-layer.js';
 

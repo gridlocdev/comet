@@ -1,7 +1,8 @@
 // The play field, drawn with the 2D canvas in field units (1280 × 720, y down, as the rules use) under a transform the
 // caller sets. Back to front: the deadly edge and its frame, hazards, anchor rings, tether, motes, trail, 1UP ring,
 // comet, crash flash. Thin lines and flat colours, nothing glowing.
-import { CONFIG, SCREEN, border } from '../world/comet-data.js';
+import { CONFIG, SCREEN } from '../world/comet-data.js';
+import { border } from '../world/hazards.js';
 import { isLive, swingWarn } from '../player/comet.js';
 import { LIFE_FLASH } from '../world/motes.js';
 import { invulnerable } from '../world/sim.js';

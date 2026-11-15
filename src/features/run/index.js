@@ -9,8 +9,9 @@ import { cards } from '../../ui/cards.js';
 import { letterIn, spellOut } from '../../ui/kinetic.js';
 import { settings } from '../../ui/settings.js';
 import { touch } from '../../ui/touch.js';
-import { pulsePitch, swingPitch } from '../../world/comet-data.js';
-import { createWorld, reset, score, step } from '../../world/sim.js';
+import { CONFIG } from '../../world/comet-data.js';
+import { createWorld, reset, step } from '../../world/sim.js';
+import { score } from '../../world/score.js';
 import { pressWord, render } from './view.js';
 
 /** @type {Record<string, [file: string, level: number]>} each sound's file and level */
@@ -19,6 +20,11 @@ const SOUNDS = {
     cometUi: ['ui_select.wav', .4], cometSwing: ['swing_loop.wav', .35], cometPulse: ['pulse_loop.wav', .4],
 };
 const SFX_NAME = { snap: 'cometSnap', chime: 'cometChime', crash: 'cometCrash' };
+
+// the swing loop's pitch follows speed, the pulse loop's follows the run's clock
+const map = (x, a, b, c, d)=> c + (Math.max(a, Math.min(b, x)) - a) / (b - a) * (d - c);
+const swingPitch = (v)=> map(v, CONFIG.vMin, CONFIG.vMax, .7, 2);
+const pulsePitch = (t)=> map(t, 0, 230, 1, 2.2);
 
 let mode = 'menu';      // menu | play | paused | over | scores (the top ten has the screen)
 let modeTime = 0;

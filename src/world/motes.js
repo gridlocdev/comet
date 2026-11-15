@@ -1,7 +1,10 @@
 // Motes: touch one for points and speed, scaled by the chain's multiplier; every few motes is an extra life, each
 // costing one more mote than the last (3, 7, 12, 18…). A taken mote comes back a few seconds later somewhere it can be
 // reached, and one the deadly edge creeps up to moves.
-import { SCREEN, border, latchRange, mult } from './comet-data.js';
+import { latchRange } from '../player/comet.js';
+import { SCREEN } from './comet-data.js';
+import { border } from './hazards.js';
+import { mult } from './score.js';
 
 const CX = SCREEN.w / 2, CY = SCREEN.h / 2;
 const dist = (ax, ay, bx, by)=> Math.hypot(ax - bx, ay - by);

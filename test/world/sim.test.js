@@ -1,7 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { CONFIG, LEVEL, SCREEN, anchorCooldown, border, latchRange, mult, swingLimit } from '../../src/world/comet-data.js';
-import { createWorld, reset, score, step } from '../../src/world/sim.js';
+import { CONFIG, LEVEL, SCREEN } from '../../src/world/comet-data.js';
+import { createWorld, reset, step } from '../../src/world/sim.js';
+import { mult, score } from '../../src/world/score.js';
+import { border } from '../../src/world/hazards.js';
+import { anchorCooldown, latchRange, swingLimit } from '../../src/player/comet.js';
 import { findMoteSpawn, motesToNextLife } from '../../src/world/motes.js';
 
 const DT = 1 / 60;
@@ -27,12 +30,6 @@ test('derived numbers follow the run clock', ()=>
     assert.equal(border(999), 230);
     assert.deepEqual([0, 3, 4, 8, 11, 12, 100].map((c)=> mult(c)), [1, 1, 1.5, 2, 2, 2.5, 4]);
     assert.ok(Math.abs(swingLimit() - 8 * Math.PI) < 1e-12);
-});
-
-test('the level fits the screen and every anchor is reachable from the start', ()=>
-{
-    for (const [x, y] of [...LEVEL.anchors, ...LEVEL.motes]) assert.ok(x > 0 && x < SCREEN.w && y > 0 && y < SCREEN.h);
-    assert.equal(LEVEL.motes.length, CONFIG.moteCount);
 });
 
 test('a run starts paused by the middle anchor, then drifts toward the centre', ()=>

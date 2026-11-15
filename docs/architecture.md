@@ -10,8 +10,9 @@ src/
               rng (the seeded xorshift32)
   platform/   engine.js (the canvas, letterboxing, URL flags, MOBILE, the fixed-step loop), input, storage, fonts
   game/       events (pub/sub), state (the save and its slices), loop (the feature list and its hooks)
-  world/      the rules of a run, headless: comet-data.js (numbers and the arena), sim.js (the fixed step: swings,
-              scoring, crashes), motes.js (pickups and extra lives), hazards.js (the creeping edge and hazard bars)
+  world/      the rules of a run, headless: comet-data.js (numbers and the arena, plain data), sim.js (the fixed step:
+              swings, crashes), score.js (the chain's multiplier and the total), motes.js (pickups and extra lives),
+              hazards.js (the creeping edge and hazard bars)
   player/     comet.js: the comet's motion (spawn, fly, latch, orbit, let go)
   render/     palette, field (the play field drawn from a world)
   ui/         cards (menus you move through with keys, a pad or a finger), initials (the three-letter entry), kinetic

@@ -4,10 +4,11 @@
 // step() queues sounds in world.sfx as { id: 'snap' | 'chime' | 'crash', pitch } for the caller to play and clear.
 // The comet's own motion is in player/comet.js, the motes in motes.js, the edge and hazards in hazards.js.
 import { prng } from '../lib/rng.js';
-import { beginSpawn, fly, launch, letGo, newComet, orbit, pushTrail, tryLatch } from '../player/comet.js';
-import { CONFIG, LEVEL, mult, swingLimit } from './comet-data.js';
+import { beginSpawn, fly, launch, letGo, newComet, orbit, pushTrail, swingLimit, tryLatch } from '../player/comet.js';
+import { CONFIG, LEVEL } from './comet-data.js';
 import { hitsDanger, trySpawnHazards } from './hazards.js';
 import { updateMotes } from './motes.js';
+import { mult } from './score.js';
 
 export function createWorld(cfg = CONFIG, level = LEVEL)
 {
@@ -39,7 +40,6 @@ export function reset(w)
     beginSpawn(w, true);
 }
 
-export const score = (w)=> Math.floor(w.scoreAccum) + w.eventPoints;
 export const invulnerable = (w)=> w.t < w.player.invulnUntil;
 
 // held: the swing button is down. pressed: it went down this step. bias: { x, y } toward the anchor to prefer (y down)

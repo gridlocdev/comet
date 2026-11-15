@@ -1,9 +1,12 @@
 // What kills the comet: the deadly edge creeping in from every side, and a new hazard bar every 30 seconds of flight,
 // up to six, kept clear of the middle, the anchors and each other.
-import { SCREEN, border } from './comet-data.js';
+import { CONFIG, SCREEN } from './comet-data.js';
 
 const CX = SCREEN.w / 2, CY = SCREEN.h / 2;
 const dist = (ax, ay, bx, by)=> Math.hypot(ax - bx, ay - by);
+
+// how far the deadly edge has crept in from every side
+export const border = (t, c = CONFIG)=> Math.max(0, Math.min(c.borderMax, c.borderRate * t));
 
 export function trySpawnHazards(w)
 {

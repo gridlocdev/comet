@@ -1,7 +1,7 @@
 // The comet's motion, one fixed step at a time: wait by the middle anchor and drift in, fly straight, latch onto an
 // anchor and swing round it at a fixed radius, let go along the tangent. Scoring and crashing are the run's
 // (world/sim.js); these only move the comet and rest the anchor it leaves.
-import { SCREEN, anchorCooldown, latchRange, swingLimit } from '../world/comet-data.js';
+import { CONFIG, SCREEN } from '../world/comet-data.js';
 
 const CX = SCREEN.w / 2, CY = SCREEN.h / 2;
 
@@ -15,6 +15,13 @@ export function newComet()
 }
 
 export const isLive = (a, now)=> now >= a.dormantUntil;
+
+// how far away an anchor can be grabbed: shrinks as the run goes on
+export const latchRange = (t, c = CONFIG)=> Math.max(c.latchRangeMin, c.latchRangeBase - c.latchRangeRamp * t);
+// how long an anchor rests after you let go of it: grows as the run goes on
+export const anchorCooldown = (t, c = CONFIG)=> Math.min(c.anchorCooldownMax, c.anchorCooldownBase + c.anchorCooldownRamp * t);
+// a full swing loop is 2π; past this many radians on one anchor the tether snaps
+export const swingLimit = (c = CONFIG)=> c.maxSwingRotations * Math.PI * 2;
 
 export function pushTrail(w)
 {
