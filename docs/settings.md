@@ -10,7 +10,7 @@ Removed, because Comet can't apply them:
 - `controls.stickSensitivity`: the stick only picks which anchor to prefer; there is no look or cursor.
 - `controls.holdActions`: the game is one held button; a toggle would change the game, not its comfort.
 - `controls.vibration`: no rumble.
-- `display.quality`, `display.renderScale`: thin lines on a black field; nothing to turn down.
+- `display.renderScale`: Graphics quality already sets the pixel ratio, Comet's one cost.
 - `a11y.shake`: nothing in Comet shakes. A crash flashes the screen's edge instead (see Reduce flashing).
 - `a11y.textScale`, `a11y.plainFont`, `a11y.highContrast`: the game's words are the pixel font at fixed sizes in a fixed palette.
 - `a11y.subtitles`, `a11y.captions`: no dialogue, and every sound has something to see with it.
@@ -30,6 +30,7 @@ Ranges are `min–max, step`.
 | `audio.mono` | toggle | | off | master folded to one channel |
 | `audio.background` | toggle | | off | a hidden tab keeps its sound |
 | `controls.deadzone` | range | 0.05–0.4, 0.05 | 0.15 | the stick read in `platform/input.js` |
+| `display.quality` | choice | auto, low, medium, high | auto | the pixel-ratio cap in `platform/graphics.js`: High 2 (the game as designed), Medium 1.5, Low 1. Automatic starts at High and steps down while frames run under 40 fps, past Low to 0.85 and 0.7 |
 | `display.brightness` | range | 0.5–1.5, 0.05 | 1 | a `brightness()` filter on the canvas, `platform/engine.js` |
 | `display.showFps` | toggle | | off | a corner readout, `ui/fps.js` |
 | `a11y.reduceFlashing` | toggle | | off (on with reduced motion) | `render/field.js`: the comet's blink while it can't be hurt becomes a steady half-bright comet, the tether stops blinking before it snaps, and the crash flash at the edge is half as bright |

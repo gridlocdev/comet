@@ -36,7 +36,7 @@ test('the screen shows what Comet can apply: Music on/off, no difficulty, no sha
     assert.deepEqual(ids, [
         'audio.master', 'audio.musicOn', 'audio.music', 'audio.sfx', 'audio.mono', 'audio.background',
         'controls.deadzone',
-        'display.brightness', 'display.showFps',
+        'display.quality', 'display.brightness', 'display.showFps',
         'a11y.reduceFlashing', 'a11y.gameSpeed',
     ]);
     assert.ok(!SCHEMA.some((s)=> s.id === 'a11y.shake'));

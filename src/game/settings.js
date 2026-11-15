@@ -5,6 +5,7 @@ import {
     changedSettings, defineSettings, mergeSettings, resetGroup, setSetting, stepSetting, visibleSettings,
 } from '../lib/settings.js';
 import { setBrightness } from '../platform/engine.js';
+import { graphics } from '../platform/graphics.js';
 import { input } from '../platform/input.js';
 import { events } from './events.js';
 import { state } from './state.js';
@@ -14,12 +15,12 @@ const MUSIC_ON = { id: 'audio.musicOn', group: 'audio', type: 'toggle', label: '
     help: 'The soundtrack. Effects keep playing.' };
 
 // what Comet doesn't have: no difficulty presets, one button so nothing to toggle, no rumble, no camera to shake,
-// one fixed look with no quality levels, no dialogue, and words drawn in one pixel font at one size and palette
+// no render scale (Graphics quality sets the pixel ratio), no dialogue, and words drawn in one pixel font at one size and palette
 export const SCHEMA = defineSettings({
     remove: [
         'difficulty.preset',
         'controls.stickSensitivity', 'controls.holdActions', 'controls.vibration',
-        'display.quality', 'display.renderScale',
+        'display.renderScale',
         'a11y.textScale', 'a11y.subtitles', 'a11y.captions', 'a11y.shake', 'a11y.highContrast', 'a11y.plainFont',
     ],
 });
@@ -36,6 +37,7 @@ function applyLow(id, value)
 {
     if (id === 'controls.deadzone') input.setDeadzone(value);
     else if (id === 'display.brightness') setBrightness(value);
+    else if (id === 'display.quality') graphics.set(value);
 }
 
 export function loadSettings()

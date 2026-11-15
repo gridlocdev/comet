@@ -1,7 +1,9 @@
 // The one file that sets up the drawing surface, the URL flags and the fixed-step loop.
 // The surface is a 2D canvas showing a fixed logical field (the game picks its size with fitSurface), as large as the
 // window allows at that aspect, centred on black. Its backing store follows the device pixel ratio, so lines and the
-// pixel font stay sharp on a high-DPI screen.
+// pixel font stay sharp on a high-DPI screen, up to the quality preset's cap.
+
+import { graphics, watchFrames } from './graphics.js';
 
 // a phone or tablet: a touch screen whose main pointer is a finger
 export const MOBILE = matchMedia('(pointer: coarse)').matches;
@@ -10,8 +12,8 @@ export const MOBILE = matchMedia('(pointer: coarse)').matches;
 const params = new URLSearchParams(location.search);
 export const FLAGS = { debug: params.has('debug'), mute: params.has('mute'), params };
 
-// past 2 device pixels per CSS pixel the picture looks no sharper, and a 3x phone would fill four times the pixels
-const MAX_DPR = 2;
+// past 2 device pixels per CSS pixel the picture looks no sharper, and a 3x phone would fill four times the pixels;
+// the Graphics quality preset (platform/graphics.js) sets the cap, 2 at High
 
 const canvas = document.createElement('canvas');
 canvas.id = 'game';
@@ -30,7 +32,7 @@ function fit()
         width: `${cssW}px`, height: `${cssH}px`,
         left: `${Math.floor((innerWidth - cssW) / 2)}px`, top: `${Math.floor((innerHeight - cssH) / 2)}px`,
     });
-    const dpr = Math.min(devicePixelRatio || 1, MAX_DPR);
+    const dpr = Math.min(devicePixelRatio || 1, graphics.dpr);     // the quality preset's cap
     canvas.width = Math.round(cssW * dpr);
     canvas.height = Math.round(cssH * dpr);
     surface.scale = canvas.width / w;
@@ -45,6 +47,7 @@ export function fitSurface(w, h)
 }
 fit();
 addEventListener('resize', fit);
+graphics.onChange(fit);
 // a window dragged to a screen with another pixel ratio fires no resize
 const watchDpr = ()=> matchMedia(`(resolution: ${devicePixelRatio}dppx)`).addEventListener('change', ()=> { fit(); watchDpr(); }, { once: true });
 watchDpr();
@@ -70,6 +73,7 @@ export function startLoop(update, draw)
         for (let n = 0; bank >= STEP && n < 12; n++) { bank -= STEP; update(STEP); }
         if (bank > STEP * 4) bank = 0;
         draw(dt);
+        watchFrames(dt);
     };
     requestAnimationFrame(frame);
 }
