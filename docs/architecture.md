@@ -33,6 +33,7 @@ src/
 - Features don't import each other. They talk through `game/events.js` or a registry.
 - A feature owns its save slice and its `*-data.js`.
 - `lib/` and `*-data.js` import no engine or DOM code and have tests. So does `world/`, which runs in node.
+- Each feature is tested through its contract (`test/features/`): `build()` with the real `game/` modules, keys pressed through `test/dom.js` (a stand-in for the browser, imported first), then the save, the events and the hooks checked. Not its own part files. One file per feature, since `game/` keeps its state at module level.
 - A new feature goes in `src/features/<name>/` and is registered in `src/features/index.js`.
 
 ## Checking
