@@ -1,8 +1,8 @@
 # Sound
 
-Every sound effect is made from code in [`src/audio/sfx-defs.js`](../src/audio/sfx-defs.js) when audio starts; there are no sound files. Comet's own sounds are single chip-style tones, one wave at one pitch, as 1.0.0's recordings were sample for sample, and the game changes their pitch as it plays them. The menus share Babonk-style ticks. Mix levels, the buses and the settings that set them are in [`src/audio/sfx.js`](../src/audio/sfx.js) and [settings.md](settings.md).
+Every sound effect is made from code in [`src/audio/sfx-defs.js`](../src/audio/sfx-defs.js) when audio starts; there are no sound files. Comet's own sounds are soft single tones in the soundtrack's key, A dorian, on round waves (sine and triangle) so they sit with the music instead of buzzing over it; the game changes their pitch as it plays them. 1.0.0 played the release, crash, swing hum and run-start blips as square and saw waves; they were softened to fit the soundtrack, and the mote ping and the drone are unchanged. The menus share Babonk-style ticks. Mix levels, the buses and the settings that set them are in [`src/audio/sfx.js`](../src/audio/sfx.js) and [settings.md](settings.md).
 
-To hear them, run `just serve` and open http://localhost:8142/tools/sound-board.html. `just old-sounds` copies 1.0.0's recordings out of git so the board can play each one next to its rebuilt sound. `just sounds` measures every sound and checks this table against the code.
+To hear them, run `just serve` and open http://localhost:8142/tools/sound-board.html. `just old-sounds` copies 1.0.0's recordings out of git so the board can play each one next to the sound that replaced it. `just sounds` measures every sound and checks this table against the code.
 
 ## Events
 

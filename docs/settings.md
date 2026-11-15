@@ -36,7 +36,7 @@ Ranges are `min–max, step`.
 | `a11y.reduceFlashing` | toggle | | off (on with reduced motion) | `render/field.js`: the comet's blink while it can't be hurt becomes a steady half-bright comet, the tether stops blinking before it snaps, and the crash flash at the edge is half as bright |
 | `a11y.gameSpeed` | range | 0.5–1, 0.1 | 1 | scales the run's time step in `features/run`; menus and sounds keep their pace |
 
-At the default volumes the effects play exactly as loud as in 1.0.0: the effects bus and the output make up for the 80% sliders.
+At the default volumes the effects bus plays at 1.0.0's level: the bus and the output make up for the 80% sliders. (The release, crash, swing hum and blips themselves are softer than 1.0.0's, see sound.md.)
 
 ## Save and loading
 
