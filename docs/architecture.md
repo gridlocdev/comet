@@ -26,6 +26,8 @@ src/
     scores/   the top ten and the initials entry, and their save slice
   dev/        ?debug tools, loaded only with that flag
   main.js     boot
+music/        the rendered soundtrack (mp3), from tools/music/songs.js
+icons/        the home-screen icons, drawn by tools/icons.mjs; manifest.json lists them
 ```
 
 ## Rules

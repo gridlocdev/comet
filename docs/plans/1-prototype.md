@@ -12,6 +12,7 @@ Comet was a cabinet in a walkable 3D arcade; it is now its own game. Decided: pl
 ## For you
 
 - [ ] Play Comet (http://localhost:8142). Does it play like the first version, and do its sounds and loops sound right? They have only been checked as code, not heard.
+- [ ] Add Comet to a phone's home screen (`just lan`, reload, then Share → Add to Home Screen): the icon should show the comet on its tether, not a letter, and it should open full screen.
 - [ ] Try it on a phone (`just lan`): the stick, SWING and pause buttons haven't been used on a real device or an emulated one.
 - [ ] The pause menu and initials entry are neon cards over the field (http://localhost:8142/?debug&shot=initials). Keep them, or draw them on the field in the pixel font like the first version?
 
@@ -24,5 +25,5 @@ Comet was a cabinet in a walkable 3D arcade; it is now its own game. Decided: pl
 
 ## Follow-ups
 
-- [ ] No home-screen icon or web manifest yet; the arcade's were for the hall.
+- [x] No home-screen icon or web manifest yet: `manifest.json` and `icons/` (drawn by `just icons`).
 - [x] The title has no on-screen way to change the sound setting: the standard settings screen opens from the title (Esc, menu button, touch pause) and the pause menu.

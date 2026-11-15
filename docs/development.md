@@ -14,6 +14,7 @@ just lan             # serve the game to your Wi-Fi, to try it on a phone
 just check           # syntax-check every module, check the layer rules and type-check against jsconfig.json
 just test            # run the unit tests
 just dead            # list modules, exports and assets nothing uses (it only reports)
+just icons           # draw the home-screen icons in icons/ (tools/icons.mjs)
 just sounds          # measure every sound effect and check docs/sound.md against the code
 just music           # render the soundtrack (tools/music/songs.js) into music/; needs ffmpeg and music-generator
 just old-sounds      # copy 1.0.0's recordings out of git for the sound board (tools/sound-board.html)

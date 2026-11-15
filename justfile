@@ -58,6 +58,10 @@ bench *args:
     @[ -d node_modules/playwright ] || just install-bench
     node tools/bench.mjs "$@"
 
+# draw the home-screen icons in icons/ from the game's shapes and palette
+icons:
+    node tools/icons.mjs
+
 # measure every sound effect (length, attack, peak, loudness) and check each event in docs/sound.md has its sound
 sounds:
     node tools/sound-report.mjs
