@@ -11,4 +11,6 @@ export const loop = {
     update(dt) { for (const s of systems) s.update?.(dt, ctx); },
     // once per display frame, with real time
     draw(dt) { for (const s of systems) s.draw?.(dt, ctx); },
+    // collect an optional hook from every system, e.g. sections('best') for the best score; nulls are left out
+    sections(hook) { return systems.map((s)=> s[hook]?.(ctx)).filter((v)=> v != null); },
 };

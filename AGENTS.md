@@ -2,7 +2,7 @@
 
 This game follows the layered, feature-folder layout in `docs/architecture.md`. Before adding or moving code, read its core sections (the intro, Layout, Rules and Checking), then only the section for the system you're changing. In short:
 
-- `lib → platform → game → (world, render, ui, audio) → features → main.js`; imports only point down that chain.
+- `lib → platform → game → (world, player, render, ui, audio) → features → main.js`; imports only point down that chain.
 - A new feature goes in `src/features/<name>/` and is registered in `src/features/index.js`. Don't add top-level `src/*.js` files, and don't edit `main.js` for features.
 - Features don't import each other; use `game/events.js` or a registry.
 - Each feature owns its save slice and its `*-data.js` content.

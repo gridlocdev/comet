@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { CONFIG, LEVEL, SCREEN, anchorCooldown, border, latchRange, mult, swingLimit } from '../../src/features/comet/comet-data.js';
-import { createWorld, findMoteSpawn, motesToNextLife, reset, score, step } from '../../src/features/comet/sim.js';
+import { CONFIG, LEVEL, SCREEN, anchorCooldown, border, latchRange, mult, swingLimit } from '../../src/world/comet-data.js';
+import { createWorld, findMoteSpawn, motesToNextLife, reset, score, step } from '../../src/world/sim.js';
 
 const DT = 1 / 60;
 const none = { x: 0, y: 0 };

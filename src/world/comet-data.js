@@ -44,4 +44,4 @@ export const swingPitch = (v, c = CONFIG)=> map(v, c.vMin, c.vMax, .7, 2);
 export const pulsePitch = (t)=> map(t, 0, 230, 1, 2.2);
 
 // the high-score table rules live in lib/, so the tests can check them without a page
-export { TABLE_SIZE, insertScore, nextLetter, qualifies, sanitize, topScore } from '../../lib/high-scores.js';
+export { TABLE_SIZE, insertScore, nextLetter, qualifies, sanitize, topScore } from '../lib/high-scores.js';

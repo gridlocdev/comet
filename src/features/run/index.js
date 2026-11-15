@@ -1,15 +1,16 @@
-// Comet: a one-button swing game. Hold to latch onto an anchor and swing, let go to fly. The page opens on its title.
-// The rules are in sim.js, the picture in view.js; this file runs the menus, sound and save.
+// A run of Comet, and the screens around it: title → play → paused or over. Hold to latch onto an anchor and swing,
+// let go to fly. The rules are in world/, the picture in view.js; this file runs the screens and the run's sound.
+// When the game-over screen closes it announces 'run-ended' { score } and waits for 'scores-done' to show the title.
 import { FLAGS } from '../../platform/engine.js';
+import { loop } from '../../game/loop.js';
 import { input } from '../../platform/input.js';
 import { sfx } from '../../audio/sfx.js';
 import { cards } from '../../ui/cards.js';
-import { showInitials } from '../../ui/initials.js';
 import { letterIn, spellOut } from '../../ui/kinetic.js';
 import { settings } from '../../ui/settings.js';
 import { touch } from '../../ui/touch.js';
-import { insertScore, pulsePitch, qualifies, swingPitch, topScore } from './comet-data.js';
-import { createWorld, reset, score, step } from './sim.js';
+import { pulsePitch, swingPitch } from '../../world/comet-data.js';
+import { createWorld, reset, score, step } from '../../world/sim.js';
 import { pressWord, render } from './view.js';
 
 /** @type {Record<string, [file: string, level: number]>} each sound's file and level */
@@ -19,9 +20,9 @@ const SOUNDS = {
 };
 const SFX_NAME = { snap: 'cometSnap', chime: 'cometChime', crash: 'cometCrash' };
 
-let mode = 'menu';      // menu | play | paused | over | initials
+let mode = 'menu';      // menu | play | paused | over | scores (the top ten has the screen)
 let modeTime = 0;
-let world = null, save = null, ctxState = null;
+let world = null, ctx = null;
 let finalScore = 0, newBest = false;
 let bot = null;
 
@@ -81,30 +82,22 @@ function showPause()
     ], { back, move: ()=> sfx.play('uiMove') });
 }
 
-function askInitials()
+// the best score so far, from whichever feature keeps it
+const best = ()=> Math.max(0, ...loop.sections('best'));
+
+// the results are closed: the top ten may take the screen, and says when it's done
+function endRun()
 {
-    setMode('initials');
+    setMode('scores');
     touch.show(false);
-    showInitials({
-        start: save.lastName ?? 'AAA',
-        change: ()=> sfx.play('cometUi'),
-        move: ()=> sfx.play('uiMove'),
-        done(name)
-        {
-            save.table = insertScore(save.table, name, finalScore);
-            save.lastName = name;
-            ctxState.write();
-            sfx.play('uiPick');
-            toMenu();
-        },
-    });
+    ctx.events.emit('run-ended', { score: finalScore });
 }
 
 function gameOver()
 {
     quiet();
     finalScore = score(world);
-    newBest = finalScore > topScore(save.table);
+    newBest = finalScore > best();
     setMode('over');
     showTouch(false);
 }
@@ -130,11 +123,11 @@ function autoPilot()
 
 export default {
     id: 'comet',
-    build({ state })
+    build(c)
     {
-        ctxState = state;
-        save = state.slice('comet', { table: [], lastName: 'AAA' });
+        ctx = c;
         world = createWorld();
+        c.events.on('scores-done', ()=> { if (mode === 'scores') toMenu(); });
         for (const [name, [file, level]] of Object.entries(SOUNDS)) sfx.load(name, `assets/audio/${file}`, level);
         // audio starts on the first key or tap; a saved 'sound off' keeps it from starting at all
         if (!settings.get('sound')) sfx.setEnabled(false);
@@ -146,12 +139,13 @@ export default {
         if (start === 'play' || start === 'bot') startRun();
         if (start === 'bot') bot = { turn: 2.5, flewAt: 0 };
         if (start === 'over' || start === 'initials') { startRun(); world.eventPoints = 4210; world.gameOver = true; gameOver(); }
-        if (start === 'initials') askInitials();
+        if (start === 'initials') endRun();
     },
     update(dt)
     {
         modeTime += dt;
-        if (mode === 'paused' || mode === 'initials') { cards.update(); return; }
+        if (mode === 'paused') { cards.update(); return; }
+        if (mode === 'scores') return;
         if (mode === 'menu')
         {
             if (modeTime < .2) return;
@@ -174,16 +168,13 @@ export default {
             world.sfx.length = 0;
             if (modeTime < 1.2) return;
             if (input.holdPressed() || input.confirm() || input.back())
-            {
-                if (qualifies(save.table, finalScore)) askInitials();
-                else toMenu();
-            }
+                endRun();
         }
     },
     draw(dt)
     {
         const word = pressWord(input.hasPad);
-        const hi = topScore(save.table);
+        const hi = best();
         let ui;
         if (mode === 'menu') ui = { field: false, hud: false, message: 'title', info: { hi }, prompt: word };
         else if (mode === 'over') ui = { field: false, hud: false, message: 'over', info: { score: finalScore, best: newBest, hi: Math.max(hi, finalScore) }, prompt: modeTime > 1.2 ? word : '' };

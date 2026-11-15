@@ -29,5 +29,6 @@ export const state = {
 // move old save shapes into slices so existing players keep their progress
 function migrate(d)
 {
-    // e.g. if (d.oldField && !d.myFeature) { d.myFeature = { value: d.oldField }; delete d.oldField; }
+    // 1.0.0 kept the top ten in a slice called 'comet'
+    if (d.comet && !d.scores) { d.scores = d.comet; delete d.comet; }
 }
