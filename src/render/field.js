@@ -2,7 +2,9 @@
 // caller sets. Back to front: the deadly edge and its frame, hazards, anchor rings, tether, motes, trail, 1UP ring,
 // comet, crash flash. Thin lines and flat colours, nothing glowing.
 import { CONFIG, SCREEN, border } from '../world/comet-data.js';
-import { LIFE_FLASH, invulnerable, isLive, swingWarn } from '../world/sim.js';
+import { isLive, swingWarn } from '../player/comet.js';
+import { LIFE_FLASH } from '../world/motes.js';
+import { invulnerable } from '../world/sim.js';
 import { C } from './palette.js';
 
 const W = SCREEN.w, H = SCREEN.h;

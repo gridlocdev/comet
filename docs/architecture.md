@@ -6,10 +6,13 @@ Comet is plain ES modules drawn on a 2D canvas, with no bundler and no runtime d
 
 ```
 src/
-  lib/        pure helpers: pixel-font (the bitmap font), high-scores (the top-ten table), synth (sound synthesis)
+  lib/        pure helpers: pixel-font (the bitmap font), high-scores (the top-ten table), synth (sound synthesis),
+              rng (the seeded xorshift32)
   platform/   engine.js (the canvas, letterboxing, URL flags, MOBILE, the fixed-step loop), input, storage, fonts
   game/       events (pub/sub), state (the save and its slices), loop (the feature list and its hooks)
-  world/      the rules of a run, headless: comet-data.js (numbers and the arena), sim.js (the fixed step)
+  world/      the rules of a run, headless: comet-data.js (numbers and the arena), sim.js (the fixed step: swings,
+              scoring, crashes), motes.js (pickups and extra lives), hazards.js (the creeping edge and hazard bars)
+  player/     comet.js: the comet's motion (spawn, fly, latch, orbit, let go)
   render/     palette, field (the play field drawn from a world)
   ui/         cards (menus you move through with keys, a pad or a finger), initials (the three-letter entry), kinetic
               (banner lettering), hud, word-layer (pixel-font words on their own canvas), settings, touch controls,
@@ -47,7 +50,7 @@ The loop runs `update(dt)` at a fixed 60 Hz and `draw(dt)` once a display frame.
 
 Read this when changing the rules, the field's look or the screens.
 
-`world/sim.js` is a fixed-step port of the first version's rules: `step(world, dt, held, pressed, bias)`, with every number in `world/comet-data.js` and the same xorshift32 seed, so a run replays exactly. It queues sounds in `world.sfx` for the `run` feature to play. Distances are screen pixels on a 1280 × 720 field with y down.
+`world/sim.js` is a fixed-step port of the first version's rules: `step(world, dt, held, pressed, bias)`, with every number in `world/comet-data.js` and the same xorshift32 seed (`lib/rng.js`), so a run replays exactly. It moves the comet through `player/comet.js` and hands the motes and the dangers to `world/motes.js` and `world/hazards.js`, in a fixed order within the step. It queues sounds in `world.sfx` for the `run` feature to play. Distances are screen pixels on a 1280 × 720 field with y down.
 
 `render/field.js` draws a world with the 2D context: shapes in field units under a transform of `surface.scale`, back to front (the deadly edge and its frame, hazards, anchor rings, tether, motes, trail, 1UP ring, comet, crash flash). Words are drawn in the bitmap font of `lib/pixel-font.js` onto canvases of their own at the surface's real resolution (`ui/word-layer.js`), so every font pixel lands on whole device pixels, and only when their text changes: the HUD (`ui/hud.js`) at most about 15 times a second, the screens' messages and prompt in `features/run/view.js`. It keeps the first version's palette (`render/palette.js`) and layout, and nothing glows.
 

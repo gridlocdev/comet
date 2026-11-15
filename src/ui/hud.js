@@ -2,7 +2,8 @@
 // pixel font on its own layer. The score ticks every step, so it redraws about 15 times a second, but at once when a
 // life comes or goes.
 import { mult } from '../world/comet-data.js';
-import { motesToNextLife, score } from '../world/sim.js';
+import { motesToNextLife } from '../world/motes.js';
+import { score } from '../world/sim.js';
 import { C } from '../render/palette.js';
 import { centre, clear, dot, fitLayer, rightAt, text, wordLayer } from './word-layer.js';
 
