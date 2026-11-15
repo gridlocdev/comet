@@ -15,4 +15,5 @@ These pages cover how to play Comet and how its code is built.
 ## Working on Comet
 
 - [Development](development.md): setting up, every command, and checking your work.
-- [Architecture](architecture.md): how the code is organized and how a run flows through it.
+- [Design](DESIGN.md): what Comet is and what it keeps from the first version.
+- [Architecture](ARCHITECTURE.md): how the code is organized and how a run flows through it.

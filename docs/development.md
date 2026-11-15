@@ -1,6 +1,6 @@
 # Development
 
-Comet is plain JavaScript ES modules on one 2D canvas, with no bundler and no runtime dependencies. The rules in `AGENTS.md` at the repository root apply to everyone working on it, and the code layout and its layer rules are in [architecture.md](architecture.md).
+Comet is plain JavaScript ES modules on one 2D canvas, with no bundler and no runtime dependencies. The rules in `AGENTS.md` at the repository root apply to everyone working on it, and the code layout and its layer rules are in [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Getting set up
 
@@ -37,7 +37,7 @@ just test    # unit tests for lib/, *-data.js, the sim and the rules
 
 ## Debug flags
 
-Add `?debug` to the URL for a readout and slow motion (`1`) or fast forward (`2`). `?debug&shot=bot` plays a run with a simple pilot. `?debug&room=hub` opens the dev rooms: a gym of the comet's limits, a zoo of every thing, sound and colour, and a museum of the systems running. The full list is in [architecture.md](architecture.md#debug-flags).
+Add `?debug` to the URL for a readout and slow motion (`1`) or fast forward (`2`). `?debug&shot=bot` plays a run with a simple pilot. `?debug&room=hub` opens the dev rooms: a gym of the comet's limits, a zoo of every thing, sound and colour, and a museum of the systems running. The full list is in [ARCHITECTURE.md](ARCHITECTURE.md#debug-flags).
 
 ## Performance
 
@@ -47,7 +47,7 @@ Add `?debug` to the URL for a readout and slow motion (`1`) or fast forward (`2`
 just bench "" "debug&shot=play" "debug&shot=bot" --shots /tmp/shots
 ```
 
-60 fps with p95 under about 18 ms is healthy. The options are in [architecture.md](architecture.md#checking).
+60 fps with p95 under about 18 ms is healthy. The options are in [ARCHITECTURE.md](ARCHITECTURE.md#checking).
 
 ## Deploying
 
