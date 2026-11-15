@@ -15,7 +15,7 @@ const MUSIC_ON = { id: 'audio.musicOn', group: 'audio', type: 'toggle', label: '
     help: 'The soundtrack. Effects keep playing.' };
 
 // what Comet doesn't have: no difficulty presets, one button so nothing to toggle, no rumble, no camera to shake,
-// no render scale (Graphics quality sets the pixel ratio), no dialogue, and words drawn in one pixel font at one size and palette
+// no render scale (Graphics quality sets the pixel ratio), no dialogue, and words in one light system font (no plain-font option needed)
 export const SCHEMA = defineSettings({
     remove: [
         'difficulty.preset',

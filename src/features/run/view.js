@@ -1,5 +1,5 @@
 // The run's picture each frame: the field and the HUD from the shared layers, and the screens' own words (title,
-// crashed, game over) with a blinking prompt, in the pixel font on layers at the screen's resolution, redrawn only
+// crashed, game over) with a blinking prompt, on layers at the screen's resolution, redrawn only
 // when their text changes.
 import { MOBILE, fitSurface, surface } from '../../platform/engine.js';
 import { SCREEN } from '../../world/comet-data.js';
@@ -85,7 +85,7 @@ export function render(w, ui, dt)
     g.fillRect(0, 0, W, H);
     if (ui.field) drawField(g, w);
 
-    // the words, in device pixels so their font pixels stay on whole pixels
+    // the words, in device pixels, from their own sharp layers
     g.setTransform(1, 0, 0, 1, 0, 0);
     if (ui.hud) drawHud(g, w, ui.hi);
     drawMessage(ui.message, ui.info);

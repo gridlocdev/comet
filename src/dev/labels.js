@@ -1,5 +1,5 @@
 // What every dev room shares: the bar of room controls, the frame each draw starts with, the scale grid, labels and
-// signs in field units, and the check views. Labels are in a plain monospace font, apart from the game's pixel font,
+// signs in field units, and the check views. Labels are in a plain monospace font, apart from the game's own light lettering,
 // so they read as notes on the game rather than part of it.
 import { FLAGS, surface } from '../platform/engine.js';
 import { input } from '../platform/input.js';

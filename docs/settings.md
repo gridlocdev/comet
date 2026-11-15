@@ -12,7 +12,7 @@ Removed, because Comet can't apply them:
 - `controls.vibration`: no rumble.
 - `display.renderScale`: Graphics quality already sets the pixel ratio, Comet's one cost.
 - `a11y.shake`: nothing in Comet shakes. A crash flashes the screen's edge instead (see Reduce flashing).
-- `a11y.textScale`, `a11y.plainFont`, `a11y.highContrast`: the game's words are the pixel font at fixed sizes in a fixed palette.
+- `a11y.textScale`, `a11y.plainFont`, `a11y.highContrast`: the game's words are one light system font at fixed sizes in a fixed palette.
 - `a11y.subtitles`, `a11y.captions`: no dialogue, and every sound has something to see with it.
 
 Tags: `gamepad`. Nothing changed or added. Full screen is a button row in Display (a browser only allows it from a press).

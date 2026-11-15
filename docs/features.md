@@ -30,4 +30,4 @@ Press `Esc` during a run for the pause menu: **Continue**, **Settings**, **Resta
 
 ## The look
 
-A black field with flat colours, thin lines and a blocky pixel font, letterboxed on black at 16:9.
+A black field with flat colours, thin lines and a light system font, the same in the menus as on the field, letterboxed on black at 16:9.

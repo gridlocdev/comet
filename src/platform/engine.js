@@ -1,7 +1,7 @@
 // The one file that sets up the drawing surface, the URL flags and the fixed-step loop.
 // The surface is a 2D canvas showing a fixed logical field (the game picks its size with fitSurface), as large as the
 // window allows at that aspect, centred on black. Its backing store follows the device pixel ratio, so lines and the
-// pixel font stay sharp on a high-DPI screen, up to the quality preset's cap.
+// words stay sharp on a high-DPI screen, up to the quality preset's cap.
 
 import { graphics, watchFrames } from './graphics.js';
 
