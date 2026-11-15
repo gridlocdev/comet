@@ -49,6 +49,9 @@ addEventListener('resize', fit);
 const watchDpr = ()=> matchMedia(`(resolution: ${devicePixelRatio}dppx)`).addEventListener('change', ()=> { fit(); watchDpr(); }, { once: true });
 watchDpr();
 
+// the Brightness setting: a filter on the one canvas (1 leaves it alone)
+export function setBrightness(v) { canvas.style.filter = v === 1 ? '' : `brightness(${v})`; }
+
 // the whole game's clock: slowing it (?debug slow motion) slows the same fixed-step simulation
 export const clock = { speed: 1, paused: false, now: 0 };
 

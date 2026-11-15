@@ -4,4 +4,4 @@ A one-button 2D swing game. Hold to latch onto the nearest live anchor and swing
 
 Kept from the first version (Comet2D): every rule and number, and its look: a black field with flat colours, thin lines and a blocky pixel font, nothing glowing, letterboxed on black at 16:9. Left out: its two-player mode and its 3D ring.
 
-The page opens on the title. Pause has Resume, Sound and End the run. The pause menu and the initials entry are neon cards over the field, not drawn in the pixel font.
+The page opens on the title. Pause has Continue, Settings, Restart and Quit to title; the standard settings open from there and from the title. The pause menu and the initials entry are neon cards over the field, not drawn in the pixel font.

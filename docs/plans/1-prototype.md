@@ -13,10 +13,13 @@ Comet was a cabinet in a walkable 3D arcade; it is now its own game. Decided: pl
 
 - [ ] Play Comet (http://localhost:8142). Does it play like the first version, and do its sounds and loops sound right? They have only been checked as code, not heard.
 - [ ] Try it on a phone (`just lan`): the stick, SWING and pause buttons haven't been used on a real device or an emulated one.
-- [ ] Is "End the run" on the pause menu wanted, or should it only have Resume and Sound?
 - [ ] The pause menu and initials entry are neon cards over the field (http://localhost:8142/?debug&shot=initials). Keep them, or draw them on the field in the pixel font like the first version?
+
+- [ ] Try the settings (http://localhost:8142/?debug&shot=settings): each tab, the bars with keys, mouse and a pad, Reset to defaults, and Back. Do Brightness, Show frame rate, Reduce flashing (crash, respawn blink, a tether about to snap) and Game speed 50% do what they say?
+- [ ] Pause a run (http://localhost:8142/?debug&shot=pause): Continue, Settings, Restart and Quit to title, with their No/Yes questions.
+- [ ] Listen: Master and Effects volume at the defaults should sound exactly as loud as before; Mono audio and Play in the background.
 
 ## Follow-ups
 
 - [ ] No home-screen icon or web manifest yet; the arcade's were for the hall.
-- [ ] The title has no on-screen way to change the sound setting; it is only on the pause menu.
+- [x] The title has no on-screen way to change the sound setting: the standard settings screen opens from the title (Esc, menu button, touch pause) and the pause menu.

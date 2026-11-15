@@ -26,7 +26,7 @@ A score in the top ten asks for three initials.
 
 ## Pause
 
-Press `Esc` during a run for the pause menu: **Resume**, **Sound** (on or off) and **End the run**.
+Press `Esc` during a run for the pause menu: **Continue**, **Settings**, **Restart** and **Quit to title**. The settings (volumes, mono, stick dead zone, brightness, frame rate, full screen, reduce flashing and game speed) also open from the title with `Esc`; see [settings.md](settings.md).
 
 ## The look
 

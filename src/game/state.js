@@ -31,4 +31,10 @@ function migrate(d)
 {
     // 1.0.0 kept the top ten in a slice called 'comet'
     if (d.comet && !d.scores) { d.scores = d.comet; delete d.comet; }
+    // 1.0.0 had one Sound on/off switch; off becomes Master volume 0
+    if (d.core && 'sound' in d.core)
+    {
+        if (!d.core.sound) (d.core.settings ??= {})['audio.master'] = 0;
+        delete d.core.sound;
+    }
 }

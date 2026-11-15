@@ -16,6 +16,9 @@ class FakeElement
     prepend() {}
     append() {}
     setPointerCapture() {}
+    setAttribute() {}
+    getAttribute() { return null; }
+    scrollIntoView() {}
     getBoundingClientRect() { return { left: 0, top: 0, width: 100, height: 100 }; }
     animate() { return { finished: Promise.resolve(), cancel() {} }; }
     getContext() { return new Proxy({}, { get: (t, k)=> k in t ? t[k] : ()=> ({ width: 0 }), set: (t, k, v)=> { t[k] = v; return true; } }); }
@@ -26,7 +29,7 @@ Object.assign(globalThis, {
     document: {
         body: new FakeElement(), documentElement: new FakeElement(),
         createElement: ()=> new FakeElement(), getElementById: ()=> new FakeElement(),
-        addEventListener() {}, fullscreenElement: null, hidden: false,
+        addEventListener() {}, fullscreenElement: null, fullscreenEnabled: false, hidden: false,
     },
     location: { search: '', href: 'http://localhost/' },
     innerWidth: 1280, innerHeight: 720, devicePixelRatio: 1,

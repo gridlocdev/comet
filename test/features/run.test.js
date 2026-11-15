@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { clearPresses, pollInput } from '../../src/platform/input.js';
 import { storage } from '../../src/platform/storage.js';
 import { state } from '../../src/game/state.js';
+import { changeSetting, loadSettings, setting } from '../../src/game/settings.js';
 import { events } from '../../src/game/events.js';
 import { loop } from '../../src/game/loop.js';
 import run from '../../src/features/run/index.js';
@@ -31,6 +32,7 @@ test('title → run → pause → resume → game over → results close → tit
 {
     await storage.init();
     state.load();
+    loadSettings();
     loop.use([{ best: ()=> 1234 }, run]);       // another feature that keeps the best score
     loop.build();
     const ended = [];
@@ -85,4 +87,49 @@ test('holding the button on the way past an anchor swings and builds the chain',
     }
     fire('keyup', { code: 'Space' });
     assert.ok(chained);
+});
+
+test('the settings open from the title and from the pause menu, and go back where they came from', ()=>
+{
+    // quit the last test's run: Quit to title asks first, No goes back, Yes quits
+    assert.equal(mode(), 'play');
+    step('Escape');
+    steps(3, 'ArrowDown');
+    step('Enter');
+    step('Enter');                              // No has the focus
+    assert.equal(mode(), 'paused');
+    step('Enter');                              // the focus came back to Quit
+    step('ArrowRight');
+    step('Enter');
+    assert.equal(mode(), 'menu');
+    steps(15);
+    step('Escape');
+    assert.equal(mode(), 'settings');
+    steps(2);
+    step('Escape');                             // Back
+    assert.equal(mode(), 'menu');
+
+    steps(15);
+    step('Space');
+    assert.equal(mode(), 'play');
+    step('Escape');
+    assert.equal(mode(), 'paused');
+    step('ArrowDown');
+    step('Enter');
+    assert.equal(mode(), 'settings');
+    step('Escape');
+    assert.equal(mode(), 'paused', 'Back returns to the pause menu');
+    step('Escape');
+    assert.equal(mode(), 'play');
+});
+
+test('Game speed slows the run, not the menus', ()=>
+{
+    assert.equal(mode(), 'play');
+    changeSetting('a11y.gameSpeed', .5);
+    assert.equal(setting('a11y.gameSpeed'), .5);
+    const t = run.debug().t;
+    steps(60);
+    assert.ok(Math.abs(run.debug().t - t - .5) < .05, `a second of play moved the run ${run.debug().t - t}s`);
+    changeSetting('a11y.gameSpeed', 1);
 });

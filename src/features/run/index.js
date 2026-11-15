@@ -1,4 +1,5 @@
-// A run of Comet, and the screens around it: title → play → paused or over. Hold to latch onto an anchor and swing,
+// A run of Comet, and the screens around it: title → play → paused or over, and settings from the title or the pause
+// menu. Hold to latch onto an anchor and swing,
 // let go to fly. The rules are in world/, the picture in view.js; this file runs the screens and the run's sound.
 // When the game-over screen closes it announces 'run-ended' { score } and waits for 'scores-done' to show the title.
 import { FLAGS } from '../../platform/engine.js';
@@ -7,12 +8,13 @@ import { input } from '../../platform/input.js';
 import { sfx } from '../../audio/sfx.js';
 import { cards } from '../../ui/cards.js';
 import { letterIn, spellOut } from '../../ui/kinetic.js';
-import { settings } from '../../ui/settings.js';
+import { showSettings } from '../../ui/settings-screen.js';
+import { setting } from '../../game/settings.js';
 import { touch } from '../../ui/touch.js';
 import { CONFIG } from '../../world/comet-data.js';
 import { createWorld, reset, step } from '../../world/sim.js';
 import { score } from '../../world/score.js';
-import { pressWord, render } from './view.js';
+import { pressWord, render, settingsWord } from './view.js';
 
 /** @type {Record<string, [file: string, level: number]>} each sound's file and level */
 const SOUNDS = {
@@ -26,8 +28,11 @@ const map = (x, a, b, c, d)=> c + (Math.max(a, Math.min(b, x)) - a) / (b - a) * 
 const swingPitch = (v)=> map(v, CONFIG.vMin, CONFIG.vMax, .7, 2);
 const pulsePitch = (t)=> map(t, 0, 230, 1, 2.2);
 
-let mode = 'menu';      // menu | play | paused | over | scores (the top ten has the screen)
+let mode = 'menu';      // menu | play | paused | settings | over | scores (the top ten has the screen)
 let modeTime = 0;
+let settingsFrom = 'menu';      // where the settings screen goes back to: 'menu' or 'paused'
+const STEP = 1 / 60;
+let acc = 0, pressHeld = false;     // Game speed: run time banked between steps, and a press waiting for the next step
 let world = null, ctx = null;
 let finalScore = 0, newBest = false;
 let bot = null;
@@ -52,24 +57,25 @@ function startRun()
 {
     sfx.play('cometUi');
     reset(world);
+    acc = 0; pressHeld = false;
     setMode('play');
     showTouch(true);
 }
 
 function quiet() { sfx.loop('cometSwing', 0); sfx.loop('cometPulse', 0); }
 
-function showPause()
+function showPause(focus = 0)
 {
     setMode('paused');
     quiet();
     touch.show(false);
-    const label = (k, n)=> `${n}: ${settings.get(k) ? 'on' : 'off'}`;
     cards.show(`
         <div class="banner" style="color:var(--cyan)"></div>
         <div class="col">
-            <button class="btn" id="c-go">Resume</button>
-            <button class="btn" id="c-sound">${label('sound', 'Sound')}</button>
-            <button class="btn" id="c-menu">End the run</button>
+            <button class="btn" id="c-go">Continue</button>
+            <button class="btn" id="c-settings">Settings</button>
+            <button class="btn" id="c-restart">Restart</button>
+            <button class="btn" id="c-menu">Quit to title</button>
         </div>
     `);
     const root = cards.root;
@@ -77,15 +83,47 @@ function showPause()
     const back = ()=> { sfx.play('uiMove'); cards.hide(); showTouch(true); setMode('play'); };
     cards.menu([
         [{ el: root.querySelector('#c-go'), pick: back }],
-        [{ el: root.querySelector('#c-sound'), pick()
+        [{ el: root.querySelector('#c-settings'), pick: ()=> { sfx.play('uiPick'); openSettings('paused'); } }],
+        [{ el: root.querySelector('#c-restart'), pick: ()=> confirm('Restart the run?', 2, ()=> { cards.hide(); startRun(); }) }],
+        [{ el: root.querySelector('#c-menu'), pick: ()=> confirm('Quit to the title? This run will end.', 3, ()=> { cards.hide(); toMenu(); }) }],
+    ], { focus: [focus, 0], back, move: ()=> sfx.play('uiMove') });
+}
+
+// Restart and Quit lose the run, so each asks first; No is focused, and No or Back returns to the pause menu
+function confirm(question, from, yes)
+{
+    sfx.play('uiMove');
+    cards.show(`
+        <div class="ask">${question}</div>
+        <div class="row-btns">
+            <button class="btn" id="c-no">No</button>
+            <button class="btn" id="c-yes">Yes</button>
+        </div>
+    `);
+    const root = cards.root;
+    const no = ()=> { sfx.play('uiMove'); showPause(from); };
+    cards.menu([[
+        { el: root.querySelector('#c-no'), pick: no },
+        { el: root.querySelector('#c-yes'), pick: ()=> { sfx.play('uiPick'); yes(); } },
+    ]], { back: no, move: ()=> sfx.play('uiMove') });
+}
+
+// settings, from the title or the pause menu; Back returns there
+function openSettings(from)
+{
+    settingsFrom = from;
+    setMode('settings');
+    touch.show(false);
+    showSettings({
+        color: 'var(--cyan)',
+        sound: (what)=> sfx.play(what === 'move' ? 'uiMove' : what === 'pick' ? 'uiPick' : 'cometChime'),
+        close()
         {
-            const on = settings.toggle('sound');
-            root.querySelector('#c-sound').textContent = `Sound: ${on ? 'on' : 'off'}`;
-            sfx.setEnabled(on);
-            sfx.play('uiPick');
-        } }],
-        [{ el: root.querySelector('#c-menu'), pick: ()=> { sfx.play('uiMove'); cards.hide(); toMenu(); } }],
-    ], { back, move: ()=> sfx.play('uiMove') });
+            if (settingsFrom === 'paused') { showPause(1); return; }
+            cards.hide();
+            toMenu();
+        },
+    });
 }
 
 // the best score so far, from whichever feature keeps it
@@ -135,27 +173,29 @@ export default {
         world = createWorld();
         c.events.on('scores-done', ()=> { if (mode === 'scores') toMenu(); });
         for (const [name, [file, level]] of Object.entries(SOUNDS)) sfx.load(name, `assets/audio/${file}`, level);
-        // audio starts on the first key or tap; a saved 'sound off' keeps it from starting at all
-        if (!settings.get('sound')) sfx.setEnabled(false);
-        touch.onPause(()=> { if (mode === 'play') showPause(); });
+        // the touch pause button pauses a run, and on the title opens the settings
+        touch.onPause(()=> { if (mode === 'play') showPause(); else if (mode === 'menu') openSettings('menu'); });
         toMenu();
 
-        // ?debug&shot=play | bot | over | initials
+        // ?debug&shot=play | bot | pause | settings | over | initials
         const start = FLAGS.debug ? FLAGS.params.get('shot') : null;
         if (start === 'play' || start === 'bot') startRun();
         if (start === 'bot') bot = { turn: 2.5, flewAt: 0 };
+        if (start === 'pause') { startRun(); showPause(); }
+        if (start === 'settings') openSettings('menu');
         if (start === 'over' || start === 'initials') { startRun(); world.eventPoints = 4210; world.gameOver = true; gameOver(); }
         if (start === 'initials') endRun();
     },
     update(dt)
     {
         modeTime += dt;
-        if (mode === 'paused') { cards.update(); return; }
+        if (mode === 'paused' || mode === 'settings') { cards.update(); return; }
         if (mode === 'scores') return;
         if (mode === 'menu')
         {
             if (modeTime < .2) return;
-            if (input.holdPressed() || input.confirm()) startRun();
+            if (input.pause()) openSettings('menu');
+            else if (input.holdPressed() || input.confirm()) startRun();
             return;
         }
         if (mode === 'play')
@@ -163,8 +203,15 @@ export default {
             if (input.pause()) { showPause(); return; }
             const m = input.move();
             const held = bot ? autoPilot() : input.hold();
-            const pressed = bot ? world.life === 'dead' : input.holdPressed();
-            step(world, dt, held, pressed, { x: m.x, y: -m.y });
+            pressHeld ||= bot ? world.life === 'dead' : input.holdPressed();
+            // Game speed slows the run itself; menus and sounds keep their pace. A press waits for the next step.
+            acc = Math.min(acc + dt * setting('a11y.gameSpeed'), STEP * 4);
+            while (acc >= STEP && !world.gameOver)
+            {
+                step(world, STEP, held, pressHeld, { x: m.x, y: -m.y });
+                pressHeld = false;
+                acc -= STEP;
+            }
             playSounds();
             if (world.gameOver) gameOver();
             return;
@@ -182,7 +229,8 @@ export default {
         const word = pressWord(input.hasPad);
         const hi = best();
         let ui;
-        if (mode === 'menu') ui = { field: false, hud: false, message: 'title', info: { hi }, prompt: word };
+        if (mode === 'menu' || mode === 'settings' && settingsFrom === 'menu')
+            ui = { field: false, hud: false, message: 'title', info: { hi, settings: settingsWord(input.hasPad) }, prompt: word };
         else if (mode === 'over') ui = { field: false, hud: false, message: 'over', info: { score: finalScore, best: newBest, hi: Math.max(hi, finalScore) }, prompt: modeTime > 1.2 ? word : '' };
         else ui = { field: true, hud: true, message: world.life === 'dead' ? 'crashed' : '', info: {}, prompt: world.life === 'dead' ? `${word} TO RESPAWN` : '', hi };
         render(world, ui, dt);

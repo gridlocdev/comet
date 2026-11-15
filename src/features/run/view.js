@@ -31,6 +31,7 @@ function drawMessage(kind, info = {})
         line('hold to swing · release to fly', 330, 22, C.dim);
         line(`HI ${info.hi}`, 540, 22, C.dim);
         line('1P', 600, 18, C.muted);
+        if (info.settings) line(info.settings, 656, 14, C.muted);
     }
     else if (kind === 'crashed')
     {
@@ -54,6 +55,13 @@ function drawPrompt(str, kind)
     promptLayer.key = key;
     clear(promptLayer);
     if (str) centre(promptLayer, str, 0, size, C.accent);
+}
+
+// how to open the settings from the title, for the device last used; a phone has the pause button
+export function settingsWord(padUsed)
+{
+    if (MOBILE) return '';
+    return padUsed ? 'MENU: SETTINGS' : 'ESC: SETTINGS';
 }
 
 // the prompt for the device last used

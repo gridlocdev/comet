@@ -5,6 +5,7 @@ import { CONFIG, SCREEN } from '../world/comet-data.js';
 import { border } from '../world/hazards.js';
 import { isLive, swingWarn } from '../player/comet.js';
 import { LIFE_FLASH } from '../world/motes.js';
+import { setting } from '../game/settings.js';
 import { invulnerable } from '../world/sim.js';
 import { C } from './palette.js';
 
@@ -32,6 +33,7 @@ function segment(g, x0, y0, x1, y1)
 export function drawField(g, w)
 {
     const t = w.t, p = w.player, r = CONFIG.playerRadius;
+    const calm = setting('a11y.reduceFlashing');
     const b = border(t);
     if (b > 0)
     {
@@ -55,10 +57,10 @@ export function drawField(g, w)
     if (p.latched && p.anchor >= 0)
     {
         const a = w.anchors[p.anchor], warn = swingWarn(w);
-        // calm blue until halfway to snapping, then red, blinking faint near the end
+        // calm blue until halfway to snapping, then red, blinking faint near the end (steady with Reduce flashing)
         const red = warn <= .5 ? 0 : (warn - .5) / .5;
         g.strokeStyle = mixColour(TETHER, RED, red);
-        g.globalAlpha = warn >= .85 && Math.floor(t * 16) % 2 === 1 ? .2 : 1;
+        g.globalAlpha = warn >= .85 && !calm && Math.floor(t * 16) % 2 === 1 ? .2 : 1;
         g.lineWidth = 1 + red;
         segment(g, p.x, p.y, a.x, a.y);
         g.globalAlpha = 1;
@@ -97,8 +99,9 @@ export function drawField(g, w)
             g.globalAlpha = 1;
         }
 
-        // blinking while it can't be hurt, with a soft white halo on a perfect
-        if (!(invulnerable(w) && Math.floor(t * 24) % 2 === 1))
+        // blinking while it can't be hurt (half bright with Reduce flashing), with a soft white halo on a perfect
+        const safe = invulnerable(w);
+        if (!(safe && !calm && Math.floor(t * 24) % 2 === 1))
         {
             g.fillStyle = C.comet;
             if (w.perfectFlash > 0)
@@ -107,15 +110,17 @@ export function drawField(g, w)
                 disc(g, p.x, p.y, r + 4);
                 g.globalAlpha = 1;
             }
+            if (safe && calm) g.globalAlpha = .5;
             disc(g, p.x, p.y, r);
+            g.globalAlpha = 1;
         }
     }
 
-    // a fresh crash flashes the screen's edge
+    // a fresh crash flashes the screen's edge, half as bright with Reduce flashing
     if (w.crashFlash > 0)
     {
         g.fillStyle = C.crash;
-        g.globalAlpha = w.crashFlash / 8;
+        g.globalAlpha = w.crashFlash / 8 * (calm ? .5 : 1);
         outline(g, 0, 0, W, H, 16);
         g.globalAlpha = 1;
     }

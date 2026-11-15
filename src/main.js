@@ -4,9 +4,11 @@ import { clearPresses, pollInput } from './platform/input.js';
 import { loadFonts } from './platform/fonts.js';
 import { storage } from './platform/storage.js';
 import { state } from './game/state.js';
+import { loadSettings } from './game/settings.js';
 import { events } from './game/events.js';
 import { loop } from './game/loop.js';
 import { features } from './features/index.js';
+import { fpsSystem } from './ui/fps.js';
 
 // the menu cards' fonts; the game's own words are in the pixel font
 await loadFonts([
@@ -16,8 +18,9 @@ await loadFonts([
 ]);
 await storage.init();
 state.load();
+loadSettings();
 
-loop.use(features);
+loop.use([fpsSystem, ...features]);
 loop.build();
 
 if (FLAGS.debug)
