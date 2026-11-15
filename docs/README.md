@@ -10,7 +10,7 @@ These pages cover how to play Comet and how its code is built.
 - [Settings](settings.md): every setting, what it does and where the game applies it.
 - [Audio](audio.md): what the game sounds like, its three tracks and when each plays.
 - [Sound](sound.md): every event that makes a sound, and the sound board to hear them.
-- [Credits](credits.md): where the fonts and sounds come from, and their licenses.
+- [Credits](credits.md): where the music and sounds come from.
 
 ## Working on Comet
 

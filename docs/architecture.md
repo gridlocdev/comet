@@ -9,7 +9,7 @@ src/
   lib/        pure helpers: pixel-font (the bitmap font), high-scores (the top-ten table), synth (sound synthesis),
               rng (the seeded xorshift32)
   platform/   engine.js (the canvas, letterboxing, URL flags, MOBILE, the fixed-step loop), graphics.js (quality presets
-              and the frame-rate watchdog), input, storage, fonts
+              and the frame-rate watchdog), input, storage
   game/       events (pub/sub), state (the save and its slices), loop (the feature list and its hooks)
   world/      the rules of a run, headless: comet-data.js (numbers and the arena, plain data), sim.js (the fixed step:
               swings, crashes), score.js (the chain's multiplier and the total), motes.js (pickups and extra lives),

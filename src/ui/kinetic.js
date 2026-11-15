@@ -13,17 +13,15 @@ export function spellOut(el, text)
     return [...el.children];
 }
 
-// each letter is driven in like a screw: it spins, overshoots and bites
+// each letter fades in a moment after the one before, rising a little: quiet, like the field
 export function letterIn(letters, { delay = 0, stagger = 55, dur = 520 } = {})
 {
     letters.forEach((s, i)=>
     {
         if (reduced) return;
         s.animate([
-            { transform: `translateY(-1.2em) rotateY(${540 + i * 40}deg) scale(1.8)`, opacity: 0, offset: 0 },
-            { transform: 'translateY(.1em) rotateY(0deg) scale(.86,1.12)', opacity: 1, offset: .62 },
-            { transform: 'translateY(-.04em) scale(1.06,.95)', offset: .8 },
-            { transform: 'translateY(0) scale(1)', opacity: 1, offset: 1 },
+            { transform: 'translateY(.15em)', opacity: 0 },
+            { transform: 'translateY(0)', opacity: 1 },
         ], { duration: dur, delay: delay + i * stagger, fill: 'both', easing: 'ease-out' });
     });
 }
