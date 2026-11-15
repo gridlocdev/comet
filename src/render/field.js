@@ -54,7 +54,7 @@ export function drawField(g, w)
     g.fillStyle = C.hazard;
     for (const h of w.hazards) g.fillRect(h.x, h.y, h.w, h.h);
 
-    if (!p.latched && w.life === 'active') reachRings(g, w, C);
+    reachRings(g, w, C);
 
     // rings 2 wide, out to the anchor's radius
     g.lineWidth = 2;
@@ -137,28 +137,32 @@ export function drawField(g, w)
 }
 
 // While the comet flies, a ring around each live anchor at the latch reach: the comet inside it can latch. The colour
-// runs green to orange to red and the line breaks into ever shorter dashes as the comet nears the edge of the reach;
-// past it the ring is faint red dots that fade away. The anchor a hold would take now is drawn bold.
+// runs green to amber to rose and the ring fades as the comet nears the edge of the reach, on out to nothing at 1.5×
+// it. Rings ease in and out rather than pop, as the comet comes and goes and as it latches and lets go. The anchor a
+// hold would take now is drawn stronger.
+const shown = new WeakMap();        // world → each anchor ring's opacity now, eased toward its aim every frame
 function reachRings(g, w, C)
 {
-    const p = w.player, range = latchRange(w.t, w.cfg);
-    const target = latchTarget(w, w.t, w.aim ?? { x: 0, y: 0 });
+    const p = w.player, range = latchRange(w.t, w.cfg), flying = !p.latched && w.life === 'active';
+    const target = flying ? latchTarget(w, w.t, w.aim ?? { x: 0, y: 0 }) : -1;
     const NEAR = rgb(C.reachNear), EDGE = rgb(C.reachEdge), OUT = rgb(C.reachOut);
+    const fade = shown.get(w) ?? [];
+    shown.set(w, fade);
     w.anchors.forEach((a, i)=>
     {
-        if (!isLive(a, w.t)) return;
         const k = Math.hypot(a.x - p.x, a.y - p.y) / range;
-        if (k >= REACH_FADE) return;
+        // full well inside the reach, 40% at its edge, none at REACH_FADE
+        const byDistance = k <= .6 ? 1 : k <= 1 ? 1 - .6 * (k - .6) / .4 : Math.max(0, .4 * (REACH_FADE - k) / (REACH_FADE - 1));
+        const aim = flying && isLive(a, w.t) ? byDistance * (i === target ? .75 : .35) : 0;
+        fade[i] = (fade[i] ?? 0) + (aim - (fade[i] ?? 0)) * REACH_EASE;
+        if (fade[i] < .01) return;
         const near = Math.min(1, Math.max(0, (k - .5) / .5));      // 0 well in reach, 1 at its edge
         g.strokeStyle = k > 1 ? C.reachOut : near < .6 ? mixColour(NEAR, EDGE, near / .6) : mixColour(EDGE, OUT, (near - .6) / .4);
-        g.globalAlpha = k > 1 ? .35 * (REACH_FADE - k) / (REACH_FADE - 1) : i === target ? .75 : .35;
+        g.globalAlpha = fade[i];
         g.lineWidth = i === target ? 1.5 : 1;
-        // solid while well in reach, then dashes shrinking from 18 to 2 and gaps growing to 10
-        const dash = k > 1 ? [3, 9] : near < .2 ? [] : [18 - 16 * (near - .2) / .8, 10 * (near - .2) / .8];
-        g.setLineDash(dash);
         g.beginPath(); g.arc(a.x, a.y, range, 0, Math.PI * 2); g.stroke();
     });
-    g.setLineDash([]);
     g.globalAlpha = 1;
 }
 const REACH_FADE = 1.5;     // past this share of the reach, no ring
+const REACH_EASE = .15;     // share of the way to its aim a ring's opacity moves each frame (about a sixth of a second)

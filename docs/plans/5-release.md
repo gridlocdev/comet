@@ -15,7 +15,7 @@ Next: the checks under For you. When they pass, tag the build (1.1.0) and deploy
 ### To play
 
 - [ ] **The game as a whole**: [http://localhost:8142](http://localhost:8142): play a few runs. It should play exactly like 1.0.0: same rules, numbers and field.
-- [ ] **Reach rings**: [http://localhost:8142](http://localhost:8142): play a few runs. While you fly, each anchor in or near reach has a ring at the latch reach: muted green, then amber and rose with shorter dashes toward its edge, faint dots past it; the bold one is what a hold takes. Can you now tell which anchor you'll get? Too busy on screen? The look on its own: [http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach](http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach).
+- [ ] **Reach rings**: [http://localhost:8142](http://localhost:8142): play a few runs. While you fly, each anchor in or near reach has a ring at the latch reach: muted green, then amber and rose, fading as you near its edge and gone a little past it; rings ease in and out; the bold one is what a hold takes. Can you now tell which anchor you'll get? Too busy on screen? The look on its own: [http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach](http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach).
 - [ ] **Words in the light font**: [http://localhost:8142](http://localhost:8142): the title, HUD, crash and game over now use the menus' light system font instead of the pixel font. Easy to read at a glance mid-run?
 - [ ] **Menus drawn like the field**: [http://localhost:8142/?debug&mute&shot=pause](http://localhost:8142/?debug&mute&shot=pause), then Settings; and [http://localhost:8142/?debug&mute&shot=initials](http://localhost:8142/?debug&mute&shot=initials): thin outlines, flat colours, a light system font, cyan for focus. Do they sit with the game?
 - [ ] **Pause**: [http://localhost:8142/?debug&mute&shot=pause](http://localhost:8142/?debug&mute&shot=pause): Continue, Settings, Restart and Quit to title, with their No/Yes questions.
@@ -57,5 +57,5 @@ Next: the checks under For you. When they pass, tag the build (1.1.0) and deploy
 - Sound effects: soft single tones on round waves that mesh with the soundtrack.
 - Menus: the minimal shape-based look of the field, not the arcade look and not the pixel font.
 - Field words: the pixel font dropped; everything in the same light system font.
-- Reach rings: coloured rings round the anchors, green to red and more dotted toward the edge of the reach, so you can tell which anchor a hold will take.
+- Reach rings: coloured rings round the anchors, green to rose, fading toward the edge of the reach, so you can tell which anchor a hold will take.
 - Dev rooms: a gym, zoo and museum under `?debug`, with smoke tests; spatial notes wait for levels (`after-1.0.md`).

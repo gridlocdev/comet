@@ -6,7 +6,7 @@ Comet is a one-button 2D swing game. It is a browser port of its first version, 
 
 ## Swinging
 
-Hold the button to latch onto the nearest live anchor and swing round it at a fixed radius. Let go to fly off along the swing. You can hold a direction to prefer the anchor that way. While you fly, a ring round each anchor shows its reach: green when you're well inside it, then orange and red and more and more dotted as you near its edge, faint red dots once you're out of it. The ring drawn bold is the anchor a hold would take. Hold on for four full turns and the tether snaps, with nothing for it.
+Hold the button to latch onto the nearest live anchor and swing round it at a fixed radius. Let go to fly off along the swing. You can hold a direction to prefer the anchor that way. While you fly, a ring round each anchor shows its reach: green when you're well inside it, then amber and rose, fading as you near its edge and out to nothing a little past it. The ring drawn bold is the anchor a hold would take. Hold on for four full turns and the tether snaps, with nothing for it.
 
 ## Chains and the multiplier
 
