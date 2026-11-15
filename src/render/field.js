@@ -151,8 +151,8 @@ function reachRings(g, w, C)
         if (k >= REACH_FADE) return;
         const near = Math.min(1, Math.max(0, (k - .5) / .5));      // 0 well in reach, 1 at its edge
         g.strokeStyle = k > 1 ? C.reachOut : near < .6 ? mixColour(NEAR, EDGE, near / .6) : mixColour(EDGE, OUT, (near - .6) / .4);
-        g.globalAlpha = k > 1 ? .7 * (REACH_FADE - k) / (REACH_FADE - 1) : i === target ? 1 : .6;
-        g.lineWidth = i === target ? 2.5 : 1.5;
+        g.globalAlpha = k > 1 ? .35 * (REACH_FADE - k) / (REACH_FADE - 1) : i === target ? .75 : .35;
+        g.lineWidth = i === target ? 1.5 : 1;
         // solid while well in reach, then dashes shrinking from 18 to 2 and gaps growing to 10
         const dash = k > 1 ? [3, 9] : near < .2 ? [] : [18 - 16 * (near - .2) / .8, 10 * (near - .2) / .8];
         g.setLineDash(dash);

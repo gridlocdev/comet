@@ -5,8 +5,8 @@ export const C = {
     mote: '#ffe066', trail: '#b8e8ff', comet: '#ffffff',
     white: '#ffffff', dim: '#9fb4c7', muted: '#6f8090', gold: '#ffe066',
     accent: '#33ccff', red: '#ff6677', crash: '#ff3355',
-    // the reach rings: well in reach, near the edge of it, out of it
-    reachNear: '#3ddc84', reachEdge: '#ffa53d', reachOut: '#ff4d4d',
+    // the reach rings, muted so they sit behind the anchors: well in reach, near the edge of it, out of it
+    reachNear: '#5f9e84', reachEdge: '#b8946a', reachOut: '#b56a6e',
 };
 
 // The dev rooms' check views (?debug&view=gray|silhouette|blackout), as palettes over the same draw calls. The shipped

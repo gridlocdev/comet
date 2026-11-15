@@ -15,7 +15,7 @@ Next: the checks under For you. When they pass, tag the build (1.1.0) and deploy
 ### To play
 
 - [ ] **The game as a whole**: [http://localhost:8142](http://localhost:8142): play a few runs. It should play exactly like 1.0.0: same rules, numbers and field.
-- [ ] **Reach rings**: [http://localhost:8142](http://localhost:8142): play a few runs. While you fly, each anchor in or near reach has a ring at the latch reach: green, then orange and red with shorter dashes toward its edge, faint red dots past it; the bold one is what a hold takes. Can you now tell which anchor you'll get? Too busy on screen? The look on its own: [http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach](http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach).
+- [ ] **Reach rings**: [http://localhost:8142](http://localhost:8142): play a few runs. While you fly, each anchor in or near reach has a ring at the latch reach: muted green, then amber and rose with shorter dashes toward its edge, faint dots past it; the bold one is what a hold takes. Can you now tell which anchor you'll get? Too busy on screen? The look on its own: [http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach](http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach).
 - [ ] **Words in the light font**: [http://localhost:8142](http://localhost:8142): the title, HUD, crash and game over now use the menus' light system font instead of the pixel font. Easy to read at a glance mid-run?
 - [ ] **Menus drawn like the field**: [http://localhost:8142/?debug&mute&shot=pause](http://localhost:8142/?debug&mute&shot=pause), then Settings; and [http://localhost:8142/?debug&mute&shot=initials](http://localhost:8142/?debug&mute&shot=initials): thin outlines, flat colours, a light system font, cyan for focus. Do they sit with the game?
 - [ ] **Pause**: [http://localhost:8142/?debug&mute&shot=pause](http://localhost:8142/?debug&mute&shot=pause): Continue, Settings, Restart and Quit to title, with their No/Yes questions.
@@ -44,7 +44,7 @@ Next: the checks under For you. When they pass, tag the build (1.1.0) and deploy
 ### Choices made without the user
 
 - Stage: Release. 1.0.0 shipped, so every stage is done and the work since is for the next tagged build; this plan is the tracker until it ships.
-- Reach rings: drawn while flying only (not while swinging, where the next reach depends on where you let go), for every live anchor up to 1.5× the reach; colours from the gym's bands; no setting to turn them off yet.
+- Reach rings: drawn while flying only (not while swinging, where the next reach depends on where you let go), for every live anchor up to 1.5× the reach; muted green, amber and rose, faint except the bold one; no setting to turn them off yet.
 - Menus: the system font in a light weight, uppercase banners spaced wide, 1 px lines in the field's frame colour, the anchor's cyan for focus, and banners that fade in. Written into `src/ui/style.css`.
 
 ## Answered
