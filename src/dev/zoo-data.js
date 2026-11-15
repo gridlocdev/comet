@@ -16,6 +16,7 @@ export const ZOO_GROUPS = [
 export const ZOO = [
     { group: 'field', key: 'comet', name: 'Comet', file: `${FIELD}, src/player/comet.js`, facts: [`radius ${c.playerRadius} px, trail ${c.trailLen} points`, `speed ${c.vMin}–${c.vMax} px/s, ${c.vSpawn} at the start`] },
     { group: 'field', key: 'anchor', name: 'Anchor', file: FIELD, facts: [`ring radius ${c.anchorRadius} px`, `latch reach ${c.latchRangeBase} px, shrinking to ${c.latchRangeMin}`] },
+    { group: 'field', key: 'reach', name: 'Reach rings', file: `${FIELD}, src/player/comet.js`, facts: [`while flying, a ring at the latch reach (${c.latchRangeBase} px, to ${c.latchRangeMin}) round each live anchor`, 'green, orange, red and more dotted toward the edge; bold: the one a hold takes'] },
     { group: 'field', key: 'anchorResting', name: 'Anchor, resting', file: FIELD, facts: [`rests ${c.anchorCooldownBase} s after you let go,`, `growing to ${c.anchorCooldownMax} s over a run`] },
     { group: 'field', key: 'tether', name: 'Tether', file: FIELD, facts: ['from the comet to its anchor while you hold', `swing radius at least ${c.rMin} px`] },
     { group: 'field', key: 'tetherStrain', name: 'Tether, straining', file: FIELD, facts: [`reddens past half of ${c.maxSwingRotations} turns`] },

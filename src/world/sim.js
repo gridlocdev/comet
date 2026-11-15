@@ -18,7 +18,7 @@ export function createWorld(cfg = CONFIG, level = LEVEL)
         t: 0, lives: 0, earnedLives: 0, scoreAccum: 0, eventPoints: 0, chain: 0, motesCollected: 0,
         nextLifeAt: 0, lifeStep: 0, hazardsSpawned: 0, launchAt: 0,
         gameOver: false, life: 'spawning',      // spawning | active | dead
-        sfx: [], crashFlash: 0, perfectFlash: 0, lifeFlash: 0,
+        sfx: [], aim: { x: 0, y: 0 }, crashFlash: 0, perfectFlash: 0, lifeFlash: 0,
     };
     reset(w);
     return w;
@@ -46,6 +46,7 @@ export const invulnerable = (w)=> w.t < w.player.invulnUntil;
 export function step(w, dt, held, pressed, bias = { x: 0, y: 0 })
 {
     if (w.gameOver) return;
+    w.aim = bias;       // kept so the field can show which anchor a hold would take
     if (w.crashFlash > 0) w.crashFlash--;
     if (w.perfectFlash > 0) w.perfectFlash--;
     if (w.lifeFlash > 0) w.lifeFlash--;

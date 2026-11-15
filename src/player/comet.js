@@ -78,10 +78,10 @@ export function orbit(w, dt)
 }
 
 // grab the nearest live anchor in reach, or with a bias { x, y } (y down), the one most that way
-export function tryLatch(w, now, bias)
+/** The anchor a hold would latch to now (-1 for none): the live one in reach most in the bias's direction, else the nearest. */
+export function latchTarget(w, now, bias)
 {
-    const c = w.cfg, p = w.player;
-    const range = latchRange(w.t, c);
+    const p = w.player, range = latchRange(w.t, w.cfg);
     const bl = Math.hypot(bias.x, bias.y);
     const biased = bl > 1e-3;
     let best = -1, bestScore = -Infinity;
@@ -93,6 +93,13 @@ export function tryLatch(w, now, bias)
         const s = biased ? (d > 1e-3 ? (tx / d * bias.x + ty / d * bias.y) / bl : 0) : -d;
         if (s > bestScore) { bestScore = s; best = i; }
     });
+    return best;
+}
+
+export function tryLatch(w, now, bias)
+{
+    const c = w.cfg, p = w.player, range = latchRange(w.t, c);
+    const best = latchTarget(w, now, bias);
     if (best < 0) return;
     const a = w.anchors[best];
     const rx = p.x - a.x, ry = p.y - a.y;

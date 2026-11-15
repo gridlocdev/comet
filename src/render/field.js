@@ -1,9 +1,9 @@
 // The play field, drawn with the 2D canvas in field units (1280 × 720, y down, as the rules use) under a transform the
-// caller sets. Back to front: the deadly edge and its frame, hazards, anchor rings, tether, motes, trail, 1UP ring,
+// caller sets. Back to front: the deadly edge and its frame, hazards, reach rings, anchor rings, tether, motes, trail, 1UP ring,
 // comet, crash flash. Thin lines and flat colours, nothing glowing. The dev rooms can switch the colours to a check view.
 import { CONFIG, SCREEN } from '../world/comet-data.js';
 import { border } from '../world/hazards.js';
-import { isLive, swingWarn } from '../player/comet.js';
+import { isLive, latchRange, latchTarget, swingWarn } from '../player/comet.js';
 import { LIFE_FLASH } from '../world/motes.js';
 import { setting } from '../game/settings.js';
 import { invulnerable } from '../world/sim.js';
@@ -53,6 +53,8 @@ export function drawField(g, w)
 
     g.fillStyle = C.hazard;
     for (const h of w.hazards) g.fillRect(h.x, h.y, h.w, h.h);
+
+    if (!p.latched && w.life === 'active') reachRings(g, w, C);
 
     // rings 2 wide, out to the anchor's radius
     g.lineWidth = 2;
@@ -134,3 +136,29 @@ export function drawField(g, w)
     }
 }
 
+// While the comet flies, a ring around each live anchor at the latch reach: the comet inside it can latch. The colour
+// runs green to orange to red and the line breaks into ever shorter dashes as the comet nears the edge of the reach;
+// past it the ring is faint red dots that fade away. The anchor a hold would take now is drawn bold.
+function reachRings(g, w, C)
+{
+    const p = w.player, range = latchRange(w.t, w.cfg);
+    const target = latchTarget(w, w.t, w.aim ?? { x: 0, y: 0 });
+    const NEAR = rgb(C.reachNear), EDGE = rgb(C.reachEdge), OUT = rgb(C.reachOut);
+    w.anchors.forEach((a, i)=>
+    {
+        if (!isLive(a, w.t)) return;
+        const k = Math.hypot(a.x - p.x, a.y - p.y) / range;
+        if (k >= REACH_FADE) return;
+        const near = Math.min(1, Math.max(0, (k - .5) / .5));      // 0 well in reach, 1 at its edge
+        g.strokeStyle = k > 1 ? C.reachOut : near < .6 ? mixColour(NEAR, EDGE, near / .6) : mixColour(EDGE, OUT, (near - .6) / .4);
+        g.globalAlpha = k > 1 ? .7 * (REACH_FADE - k) / (REACH_FADE - 1) : i === target ? 1 : .6;
+        g.lineWidth = i === target ? 2.5 : 1.5;
+        // solid while well in reach, then dashes shrinking from 18 to 2 and gaps growing to 10
+        const dash = k > 1 ? [3, 9] : near < .2 ? [] : [18 - 16 * (near - .2) / .8, 10 * (near - .2) / .8];
+        g.setLineDash(dash);
+        g.beginPath(); g.arc(a.x, a.y, range, 0, Math.PI * 2); g.stroke();
+    });
+    g.setLineDash([]);
+    g.globalAlpha = 1;
+}
+const REACH_FADE = 1.5;     // past this share of the reach, no ring

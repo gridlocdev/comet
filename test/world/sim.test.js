@@ -4,7 +4,7 @@ import { CONFIG, LEVEL, SCREEN } from '../../src/world/comet-data.js';
 import { createWorld, reset, step } from '../../src/world/sim.js';
 import { mult, score } from '../../src/world/score.js';
 import { border } from '../../src/world/hazards.js';
-import { anchorCooldown, latchRange, swingLimit } from '../../src/player/comet.js';
+import { anchorCooldown, latchRange, latchTarget, swingLimit } from '../../src/player/comet.js';
 import { findMoteSpawn, motesToNextLife } from '../../src/world/motes.js';
 
 const DT = 1 / 60;
@@ -199,4 +199,19 @@ test('a respawned mote lands inside the edge and off the anchors', ()=>
         assert.ok(p.x >= edge && p.x <= SCREEN.w - edge && p.y >= edge && p.y <= SCREEN.h - edge);
         for (const a of w.anchors) assert.ok(Math.hypot(p.x - a.x, p.y - a.y) >= CONFIG.anchorRadius + CONFIG.moteRadius + 6);
     }
+});
+
+test('the reach rings show the anchor a hold takes: latchTarget picks what tryLatch latches to', ()=>
+{
+    for (const bias of [none, { x: 1, y: 0 }, { x: -1, y: 0 }, { x: 0, y: -1 }])
+    {
+        const a = LEVEL.anchors[4], w = placed(a[0] + 60, a[1] + 40, 0, -100);
+        const want = latchTarget(w, w.t, bias);
+        step(w, DT, true, true, bias);
+        assert.ok(want >= 0);
+        assert.equal(w.player.anchor, want);
+        assert.deepEqual(w.aim, bias);
+    }
+    const far = placed(SCREEN.w / 2, 30, 0, 0);
+    assert.equal(latchTarget(far, far.t, none), -1);
 });

@@ -25,11 +25,12 @@ function fieldWorld(key)
     const level = { anchors: [OFF], motes: [] };
     if (key.startsWith('anchor') || key.startsWith('tether')) level.anchors = [[640, 360]];
     if (key === 'mote') level.motes = [[640, 360]];
+    if (key === 'reach') level.anchors = [[560, 360], [760, 360]];
     const w = createWorld(CONFIG, level), p = w.player;
     Object.assign(p, { x: 690, y: 360, vx: 0, vy: 0, latched: false, anchor: -1, invulnUntil: 0 });
     p.trail.length = 0;
     w.life = 'active';
-    let at = [660, 360], tick = null;
+    let at = [660, 360], tick = null, zoom = 1;
     const swing = (warn)=> (time)=>
     {
         Object.assign(p, { latched: true, anchor: 0, r: 50, theta: time * 2, swept: warn * swingLimit() });
@@ -48,9 +49,11 @@ function fieldWorld(key)
         case 'oneUp': at = [690, 360]; tick = (time)=> { w.lifeFlash = LIFE_FLASH - Math.floor(time * 60) % LIFE_FLASH; }; break;
         case 'perfect': at = [690, 360]; w.perfectFlash = 6; break;
         case 'safe': at = [690, 360]; p.invulnUntil = Infinity; tick = (time)=> { w.t = .01 + time % 1; }; break;
+        // the comet drifts across two anchors and back, so each ring runs green to red and the bold one changes hands
+        case 'reach': at = [660, 360]; zoom = .3; tick = (time)=> { p.x = 660 + 330 * Math.sin(time * .7); p.y = 420; p.vx = Math.cos(time * .7); }; break;
         case 'crash': p.x = 80; at = [60, 360]; tick = (time)=> { w.crashFlash = 8 - Math.floor(time * 12) % 12; }; break;
     }
-    return { w, at, tick };
+    return { w, at, tick, zoom };
 }
 
 // a field world drawn into a box, its point `at` in the middle, `zoom` times its size
@@ -59,7 +62,7 @@ function drawWorld(g, fw, box, zoom)
     g.save();
     g.beginPath(); g.rect(box.x, box.y, box.w, box.h); g.clip();
     g.translate(box.x + box.w / 2, box.y + box.h / 2);
-    g.scale(zoom, zoom);
+    g.scale(zoom * fw.zoom, zoom * fw.zoom);
     g.translate(-fw.at[0], -fw.at[1]);
     drawField(g, fw.w);
     g.restore();

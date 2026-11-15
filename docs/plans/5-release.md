@@ -2,19 +2,21 @@
 
 ## Where things stand
 
-1.0.0 shipped. Since then, for the next build: the code split by layer, the standard settings (from the title and the pause menu), every sound effect made from code and then softened, a lead-free soundtrack, graphics quality presets with a frame-rate watchdog, a web manifest and home-screen icons, menus drawn like the field, and the dev rooms (`?debug&room=hub`). Everything was checked headless, in numbers and screenshots; nothing has been heard or played by hand yet.
+1.0.0 shipped. Since then, for the next build: the code split by layer, the standard settings (from the title and the pause menu), every sound effect made from code and then softened, a lead-free soundtrack, graphics quality presets with a frame-rate watchdog, a web manifest and home-screen icons, menus and the field's words in a light system font (the pixel font is gone), reach rings round the anchors, and the dev rooms (`?debug&room=hub`). Everything was checked headless, in numbers and screenshots; nothing has been heard or played by hand yet.
 
 Next: the checks under For you. When they pass, tag the build (1.1.0) and deploy it to gridloc.dev.
 
 ## For you
 
-- To play: 9 checks, under To play
+- To play: 11 checks, under To play
 - To hear: 4 checks, under To hear
 - Not yet checked: 3 devices or setups
 
 ### To play
 
 - [ ] **The game as a whole**: [http://localhost:8142](http://localhost:8142): play a few runs. It should play exactly like 1.0.0: same rules, numbers and field.
+- [ ] **Reach rings**: [http://localhost:8142](http://localhost:8142): play a few runs. While you fly, each anchor in or near reach has a ring at the latch reach: green, then orange and red with shorter dashes toward its edge, faint red dots past it; the bold one is what a hold takes. Can you now tell which anchor you'll get? Too busy on screen? The look on its own: [http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach](http://localhost:8142/?debug&mute&room=zoo&group=field&item=reach).
+- [ ] **Words in the light font**: [http://localhost:8142](http://localhost:8142): the title, HUD, crash and game over now use the menus' light system font instead of the pixel font. Easy to read at a glance mid-run?
 - [ ] **Menus drawn like the field**: [http://localhost:8142/?debug&mute&shot=pause](http://localhost:8142/?debug&mute&shot=pause), then Settings; and [http://localhost:8142/?debug&mute&shot=initials](http://localhost:8142/?debug&mute&shot=initials): thin outlines, flat colours, a light system font, cyan for focus. Do they sit with the game?
 - [ ] **Pause**: [http://localhost:8142/?debug&mute&shot=pause](http://localhost:8142/?debug&mute&shot=pause): Continue, Settings, Restart and Quit to title, with their No/Yes questions.
 - [ ] **Settings**: [http://localhost:8142/?debug&mute&shot=settings](http://localhost:8142/?debug&mute&shot=settings): each tab, the bars with keys, mouse and a pad, Reset to defaults and Back. Brightness, Show frame rate, Reduce flashing (crash, respawn blink, a tether about to snap) and Game speed 50% should do what they say.
@@ -42,6 +44,7 @@ Next: the checks under For you. When they pass, tag the build (1.1.0) and deploy
 ### Choices made without the user
 
 - Stage: Release. 1.0.0 shipped, so every stage is done and the work since is for the next tagged build; this plan is the tracker until it ships.
+- Reach rings: drawn while flying only (not while swinging, where the next reach depends on where you let go), for every live anchor up to 1.5× the reach; colours from the gym's bands; no setting to turn them off yet.
 - Menus: the system font in a light weight, uppercase banners spaced wide, 1 px lines in the field's frame colour, the anchor's cyan for focus, and banners that fade in. Written into `src/ui/style.css`.
 
 ## Answered
@@ -53,4 +56,6 @@ Next: the checks under For you. When they pass, tag the build (1.1.0) and deploy
 - Soundtrack: backing tracks with no lead, so nothing chirps over the comet's own sounds.
 - Sound effects: soft single tones on round waves that mesh with the soundtrack.
 - Menus: the minimal shape-based look of the field, not the arcade look and not the pixel font.
+- Field words: the pixel font dropped; everything in the same light system font.
+- Reach rings: coloured rings round the anchors, green to red and more dotted toward the edge of the reach, so you can tell which anchor a hold will take.
 - Dev rooms: a gym, zoo and museum under `?debug`, with smoke tests; spatial notes wait for levels (`after-1.0.md`).
